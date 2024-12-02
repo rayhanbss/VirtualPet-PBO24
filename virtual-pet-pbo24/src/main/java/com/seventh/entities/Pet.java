@@ -1,57 +1,83 @@
 package com.seventh.entities;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 
 public abstract class Pet {
     private final String name;
-    private final LocalDate brithdate;
-    private String status;
-    private int hunger, thrist, happiness, cleanness;
-    private final int MAX_STATS;
+    private final LocalDate birthDate;
+    private String age;
+    private double energy, hunger, thirst, happiness, cleanness;
+    private final double MAX_STATS;
+    protected boolean isTired, isHungry, isThristy, isSad, isDirty;
 
     public Pet(String name){
         this.name = name;
-        this.brithdate = LocalDate.now();
+        this.birthDate = LocalDate.now();
         MAX_STATS = 100;
+        this.isTired = this.isHungry = this.isThristy = 
+        this.isSad = this.isDirty = false;
     }
-
-    // Setter
-    public void setHunger(){
-        if(hunger + 5 > MAX_STATS){
-            hunger = MAX_STATS;
-        }else{
-            hunger += 5;
+    
+    // updateAge
+    public void updateAge() {
+        LocalDate currentDate = LocalDate.now();
+        double calAgeInDays = ChronoUnit.DAYS.between(birthDate, currentDate) / 7.0;
+        double ageInYears = calAgeInDays / 365.25;
+        double ageInWeeks = calAgeInDays / 7.0;
+    
+        if (ageInWeeks > 52) {
+            age = String.format("%.0f Weeks", ageInWeeks);
+        } else {
+            age = String.format("%.2f Years", ageInYears);
         }
     }
-    public void setThrist(){
-        if(thrist + 5 > MAX_STATS){
-            thrist = MAX_STATS;
-        }else{
-            thrist += 5;
-        }
+    
+    // Setter for Status
+    private double adjustStat(double current, double amount) {
+        return Math.min(current + amount, MAX_STATS);
     }
-    public void setHappiness(){
-        if(happiness + 5 > MAX_STATS){
-            happiness = MAX_STATS;
-        }else{
-            happiness += 5;
-        }
+    public void setEnergy(double amount){
+        energy = adjustStat(energy, amount);
     }
-    public void setCleanness(){
-        if(cleanness + 5 > MAX_STATS){
-            cleanness = MAX_STATS;
-        }else{
-            cleanness += 5;
-        }
+    public void setHunger(double amount){
+        hunger = adjustStat(hunger, amount);
+    }
+    public void setThirst(double amount){
+        thirst = adjustStat(thirst, amount);
+    }
+    public void setHappiness(double amount){
+        happiness = adjustStat(happiness, amount);
+    }
+    public void setCleanness(double amount){
+        cleanness = adjustStat(cleanness, amount);
+    }
+    
+    // Setter for mood
+    public void setTired(double bounds){
+        isTired = (energy < bounds);
+    }
+    public void setHungry(double bounds){
+        isHungry = (hunger < bounds);
+    }
+    public void setThrirsty(double bounds){
+        isThristy = (thirst < bounds);
+    }
+    public void setSad(double bounds){
+        isSad = (happiness < bounds);
+    }
+    public void setDirty(double bounds){
+        isDirty = (cleanness < bounds);
     }
     
     // Getter
     public String getName(){return name;}
-    public LocalDate getBirthDate(){return brithdate;}
-    public String getStatus(){return status;}
-    public int getMAX_STATS(){return MAX_STATS;}
-    public int getHunger(){return hunger;}
-    public int getThrist(){return thrist;}
-    public int getHappiness(){return happiness;}
-    public int getLeanness(){return cleanness;}
+    public String getAge(){return age;}
+    public LocalDate getBirthDate(){return birthDate;}
+    public double getMAX_STATS(){return MAX_STATS;}
+    public double getHunger(){return hunger;}
+    public double getThirst(){return thirst;}
+    public double getHappiness(){return happiness;}
+    public double getLeanness(){return cleanness;}
+    public boolean getHungry(){return isHungry;}
 }

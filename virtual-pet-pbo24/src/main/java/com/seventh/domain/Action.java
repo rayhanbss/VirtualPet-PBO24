@@ -1,6 +1,7 @@
 package com.seventh.domain;
 
 public interface Action {
+    public void updateStatus();
     public void giveFood();
     public void giveDrink();
     public void playWith();
