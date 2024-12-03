@@ -4,17 +4,33 @@ import java.time.temporal.ChronoUnit;
 
 
 public abstract class Pet {
+
     private final String name;
     private final LocalDate birthDate;
     private String age;
-    private double energy, hunger, thirst, happiness, cleanness;
-    private final double MAX_STATS;
-    protected boolean isTired, isHungry, isThristy, isSad, isDirty;
-
-    public Pet(String name){
+    
+    protected final double MAX_HEALTH;
+    private final static double  DOG_MAX_HEALTH = 100;
+    private final static double  CAT_MAX_HEALTH = 70;
+    private final static double  HAMSTER_MAX_HEALTH = 50;
+    
+    private final double MAX_STATS = 100;
+    protected double health, energy, hunger, thirst, happiness, cleanness;
+    protected boolean isDead, isSick, isTired, isHungry, isThristy, isSad, isDirty;
+    
+    public Pet(String name, double upperBound){
         this.name = name;
         this.birthDate = LocalDate.now();
-        MAX_STATS = 100;
+        
+        // status upper bounds
+        this.MAX_HEALTH = upperBound;
+        
+        //status set status level
+        health = MAX_HEALTH;
+        energy = 100;
+        hunger = thirst = happiness = cleanness = 80;
+        
+        // negative effects
         this.isTired = this.isHungry = this.isThristy = 
         this.isSad = this.isDirty = false;
     }
@@ -25,7 +41,7 @@ public abstract class Pet {
         double calAgeInDays = ChronoUnit.DAYS.between(birthDate, currentDate) / 7.0;
         double ageInYears = calAgeInDays / 365.25;
         double ageInWeeks = calAgeInDays / 7.0;
-    
+        
         if (ageInWeeks > 52) {
             age = String.format("%.0f Weeks", ageInWeeks);
         } else {
@@ -33,51 +49,73 @@ public abstract class Pet {
         }
     }
     
-    // Setter for Status
-    private double adjustStat(double current, double amount) {
-        return Math.min(current + amount, MAX_STATS);
+    // Setter for status
+    public void setHealth(double amount){
+        health =  Math.min(health + amount, MAX_HEALTH);
     }
     public void setEnergy(double amount){
-        energy = adjustStat(energy, amount);
+        energy = Math.min(energy + amount, MAX_STATS);
     }
     public void setHunger(double amount){
-        hunger = adjustStat(hunger, amount);
+        hunger = Math.min(hunger + amount, MAX_STATS);
     }
     public void setThirst(double amount){
-        thirst = adjustStat(thirst, amount);
+        thirst = Math.min(thirst + amount, MAX_STATS);
     }
     public void setHappiness(double amount){
-        happiness = adjustStat(happiness, amount);
+        happiness = Math.min(happiness + amount, MAX_STATS);
     }
     public void setCleanness(double amount){
-        cleanness = adjustStat(cleanness, amount);
+        cleanness = Math.min(cleanness + amount, MAX_STATS);
     }
     
-    // Setter for mood
-    public void setTired(double bounds){
-        isTired = (energy < bounds);
+    // Setter for negative effects
+    public void setDead(){
+        isDead = (health == 0);
     }
-    public void setHungry(double bounds){
-        isHungry = (hunger < bounds);
+    public void setSick(double lowerBounds){
+        isSick = (health < lowerBounds);
     }
-    public void setThrirsty(double bounds){
-        isThristy = (thirst < bounds);
+    public void setTired(double lowerBounds){
+        isTired = (energy < lowerBounds);
     }
-    public void setSad(double bounds){
-        isSad = (happiness < bounds);
+    public void setHungry(double lowerBounds){
+        isHungry = (hunger < lowerBounds);
     }
-    public void setDirty(double bounds){
-        isDirty = (cleanness < bounds);
+    public void setThrirsty(double lowerBounds){
+        isThristy = (thirst < lowerBounds);
+    }
+    public void setSad(double lowerBounds){
+        isSad = (happiness < lowerBounds);
+    }
+    public void setDirty(double lowerBounds){
+        isDirty = (cleanness < lowerBounds);
     }
     
-    // Getter
+    // Getter pet info
     public String getName(){return name;}
     public String getAge(){return age;}
     public LocalDate getBirthDate(){return birthDate;}
-    public double getMAX_STATS(){return MAX_STATS;}
+    
+    // Getter health for each pet type
+    public static double DOG_MAX_HEALTH() {return DOG_MAX_HEALTH;}
+    public static double CAT_MAX_HEALTH() {return CAT_MAX_HEALTH;}
+    public static double HAMSTER_MAX_HEALTH() {return HAMSTER_MAX_HEALTH;}
+    
+    // Getter status level
+    public double getHealth(){return health;}
+    public double getEnergy(){return energy;}
     public double getHunger(){return hunger;}
     public double getThirst(){return thirst;}
     public double getHappiness(){return happiness;}
-    public double getLeanness(){return cleanness;}
+    public double getCleanness(){return cleanness;}
+    
+    // Getter negative effects
+    public boolean getDead(){return isDead;}
+    public boolean getSick(){return isSick;}
+    public boolean getTired(){return isTired;}
     public boolean getHungry(){return isHungry;}
+    public boolean getThrirsty(){return isThristy;}
+    public boolean getSad(){return isSad;}
+    public boolean getDirty(){return isDirty;}
 }

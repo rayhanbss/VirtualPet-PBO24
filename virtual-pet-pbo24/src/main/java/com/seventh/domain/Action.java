@@ -2,11 +2,10 @@ package com.seventh.domain;
 
 public interface Action {
     public void updateStatus();
-    public void giveFood();
-    public void giveDrink();
-    public void playWith();
-    public void walkWith();
-    public void takeNap();
-    public void givePet();
-    public void clean();
+    public void goToVet();          // incrase health
+    public void giveFood();         // incrase hunger
+    public void giveDrink();        // incrase thrirst
+    public void playWith();         // incrase happiness
+    public void takeNap();          // incrase energy
+    public void clean();            // incrase clean
 }
