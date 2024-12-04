@@ -1,7 +1,9 @@
 package com.seventh;
 
+import com.seventh.ui.MainUI;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        MainUI ui = new MainUI();
     }
 }
