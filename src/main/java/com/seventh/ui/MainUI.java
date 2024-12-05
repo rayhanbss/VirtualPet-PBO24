@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +32,16 @@ public class MainUI {
     JTextField petName, petAge;
     Font mainFont, subFont;
 
+    JPanel buttonPanel;
+    JButton vet, food, drink, play, nap, clean;
+
+    JPanel barPanel;
     JProgressBar healthBar;
     JProgressBar hungerBar;
     JProgressBar thrirstBar;
 
-    List<JTextField> bullets;
     JPanel bulletPanel;
+    List<JTextField> bullets;
 
     Color black = new Color(29,29,29);
     Color white = new Color(246,246,246);
@@ -50,7 +53,13 @@ public class MainUI {
     private final int width = 540;
     private final int height = 720;
 
-    
+    private void setStyle(JButton button, Color color){
+        button.setPreferredSize(new Dimension(65,50));
+        // button.setBorder(null);
+        button.setForeground(white);
+        button.setBackground(color);
+    }
+
 
     public MainUI(){
         try {
@@ -73,7 +82,7 @@ public class MainUI {
                 main.setPreferredSize(new Dimension(440, height));
                 main.setBackground(Color.RED);
 
-                // Right bound with button ---------------------------------------
+                // > Right bound with button ---------------------------------------
                 rightButton = new JButton(">");
                 rightButton.setForeground(black);
                 rightButton.setBackground(null);
@@ -86,7 +95,7 @@ public class MainUI {
                 rightBound.setBackground(white);
                 rightBound.add(rightButton, BorderLayout.CENTER);
 
-                // Right bound with button ---------------------------------------
+                // > Left bound with button ----------------------------------------
                 leftButton = new JButton("<");
                 leftButton.setForeground(black);
                 leftButton.setBackground(null);
@@ -99,9 +108,9 @@ public class MainUI {
                 leftBound.setBackground(white);
                 leftBound.add(leftButton, BorderLayout.CENTER);
 
-                // Top part ------------------------------------------------------
+                // >> Top part ------------------------------------------------------
 
-                // Pet Name
+                // >>> Pet Name
                 petName = new JTextField("Pet Name");
                 petName.setHorizontalAlignment(JTextField.CENTER);
                 petName.setDisabledTextColor(black);
@@ -116,7 +125,7 @@ public class MainUI {
                 h_petName.setBackground(null);
                 h_petName.add(petName, BorderLayout.SOUTH);
 
-                // Pet Age
+                // >>> Pet Age
                 petAge = new JTextField("?? Month ?? Years");
                 petAge.setHorizontalAlignment(JTextField.CENTER);
                 petAge.setDisabledTextColor(black);
@@ -140,37 +149,78 @@ public class MainUI {
                 top.add(h_petName, BorderLayout.NORTH);
                 top.add(h_petAge, BorderLayout.SOUTH);
                 
-                // Center Part ---------------------------------------------------
+                // >> Center Part ---------------------------------------------------
                 center = new JPanel();
                 center.setPreferredSize(new Dimension(440, 300));
                 center.setBackground(Color.PINK);
                 
-                // Bottom Part ---------------------------------------------------
-                // Health Bar
+                // >> Bottom Part ---------------------------------------------------
+
+                // >>> Button Panel
+                vet = new JButton("");
+                setStyle(vet, green);
+                food = new JButton("");
+                setStyle(food, red);
+                drink = new JButton("");
+                setStyle(drink, blue);
+                play = new JButton("");
+                setStyle(play, green);
+                nap = new JButton("");
+                setStyle(nap, green);
+                clean = new JButton("");
+                setStyle(clean, green);
+               
+                
+                buttonPanel  = new JPanel();
+                buttonPanel .setPreferredSize(new Dimension(400, 60));
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+                buttonPanel.setBackground(null);
+                buttonPanel.add(vet);
+                buttonPanel.add(food);
+                buttonPanel.add(drink);
+                buttonPanel.add(play);
+                buttonPanel.add(nap);
+                buttonPanel.add(clean);
+
+                
+                // >>> Bar Panel
+                // >>>> Health Bar
                 healthBar = new JProgressBar();
-                healthBar.setPreferredSize(new Dimension(400, 22));
-                healthBar.setBorder(null);
+                healthBar.setPreferredSize(new Dimension(400, 30));
+                // healthBar.setBorder(null);
+                healthBar.setUI(new RoundedProgressBarUI(20));
                 healthBar.setForeground(green);
                 healthBar.setBackground(grey);
                 healthBar.setValue(50);
 
-                // Hunger Bar
+                // >>>> Hunger Bar
                 hungerBar = new JProgressBar();
-                hungerBar.setPreferredSize(new Dimension(400, 22));
-                hungerBar.setBorder(null);
+                hungerBar.setPreferredSize(new Dimension(400, 30));
+                // hungerBar.setBorder(null);
+                hungerBar.setUI(new RoundedProgressBarUI(20));
                 hungerBar.setForeground(red);
                 hungerBar.setBackground(grey);
                 hungerBar.setValue(50);
 
-                // Thrirst Bar
+                // >>>> Thrirst Bar
                 thrirstBar = new JProgressBar();
-                thrirstBar.setPreferredSize(new Dimension(400, 22));
-                thrirstBar.setBorder(null);
+                thrirstBar.setPreferredSize(new Dimension(400, 30));
+                // thrirstBar.setBorder(null);
+                thrirstBar.setUI(new RoundedProgressBarUI(20));
                 thrirstBar.setForeground(blue);
                 thrirstBar.setBackground(grey);
                 thrirstBar.setValue(50);
+
+                barPanel = new JPanel();
+                barPanel.setPreferredSize(new Dimension(440, 110));
+                barPanel.setLayout(new BorderLayout(5,10));
+                barPanel.setAlignmentY(JPanel.CENTER_ALIGNMENT);
+                barPanel.setBackground(null);
+                barPanel.add(healthBar, BorderLayout.NORTH);
+                barPanel.add(hungerBar, BorderLayout.CENTER);
+                barPanel.add(thrirstBar, BorderLayout.SOUTH);
                 
-                // Bullet
+                // >>> Bullet
                 bullets = new ArrayList<>();
                 for(int i = 0; i < 3; i++){
                     JTextField bullet = new JTextField("⦁");
@@ -186,21 +236,24 @@ public class MainUI {
 
                 bulletPanel = new JPanel();
                 bulletPanel.setLayout(new FlowLayout());
+                bulletPanel.setPreferredSize(new Dimension(400, 50));
                 bulletPanel.setBackground(null);
                 bulletPanel.setBorder(null);
                 bulletPanel.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+                bulletPanel.setAlignmentY(JPanel.CENTER_ALIGNMENT);
                 for(JTextField bullet : bullets){
                     bulletPanel.add(bullet);
                 }
 
+
                 bottom = new JPanel();
                 bottom.setPreferredSize(new Dimension(440, 220));
-                bottom.setLayout(new GridLayout(5,1,20,11));
+                bottom.setLayout(new BorderLayout());
+                bottom.setAlignmentY(JPanel.CENTER_ALIGNMENT);
                 bottom.setBackground(white);
-                bottom.add(healthBar);
-                bottom.add(hungerBar);
-                bottom.add(thrirstBar);
-                bottom.add(bulletPanel);
+                bottom.add(barPanel, BorderLayout.NORTH);
+                bottom.add(buttonPanel , BorderLayout.CENTER);
+                bottom.add(bulletPanel, BorderLayout.SOUTH);
 
 
                 main.add(top, BorderLayout.NORTH);
