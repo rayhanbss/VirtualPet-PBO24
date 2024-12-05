@@ -4,19 +4,23 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
+import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.seventh.entities.Pet;
 
 public class MainUI {
@@ -24,21 +28,21 @@ public class MainUI {
     private int indexOfCurrent;
 
     JFrame frame;
+    LookAndFeel dark, light;
+
     JPanel main, top, center, bottom;
 
     JPanel rightBound, leftBound;
     JButton rightButton, leftButton;
     JPanel h_petName, h_petAge;
     JTextField petName, petAge;
-    Font mainFont, subFont;
+    Font mainFont, subFont, materialDesignFont;
 
     JPanel buttonPanel;
     JButton vet, food, drink, play, nap, clean;
 
     JPanel barPanel;
-    JProgressBar healthBar;
-    JProgressBar hungerBar;
-    JProgressBar thrirstBar;
+    RoundedProgressBar healthBar, hungerBar, thrirstBar;
 
     JPanel bulletPanel;
     List<JTextField> bullets;
@@ -60,10 +64,25 @@ public class MainUI {
         button.setBackground(color);
     }
 
+    private Font TTFloader(Font materialFont){
+        try {
+            materialFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/main/java/com/seventh/font/MaterialSymbolsRounded.ttf"));
+            materialFont = materialFont.deriveFont(36f);
+
+        } catch (IOException | FontFormatException e) {
+            System.out.println("Failed load font");
+        }
+
+        System.out.println("font loaded");
+        return materialFont;
+    }
+
 
     public MainUI(){
+        dark = new FlatMacDarkLaf();
+        light = new FlatMacLightLaf();
         try {
-            UIManager.setLookAndFeel(new FlatMacDarkLaf());  // Or use FlatDarkLaf()
+            UIManager.setLookAndFeel(light);  // Or use FlatDarkLaf()
             // Create and display your GUI
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("Virtual Pet");
@@ -75,37 +94,38 @@ public class MainUI {
 
                 mainFont = new Font("Open Sans",Font.BOLD, 24);
                 subFont = new Font("Open Sans",Font.PLAIN, 12);
+                materialDesignFont = TTFloader(materialDesignFont);
 
                 // Main Panel ----------------------------------------------------
                 main = new JPanel();
                 main.setLayout(new BorderLayout());
                 main.setPreferredSize(new Dimension(440, height));
-                main.setBackground(Color.RED);
+                main.setBackground(null);
 
                 // > Right bound with button ---------------------------------------
-                rightButton = new JButton(">");
+                rightButton = new JButton("\ue315");
                 rightButton.setForeground(black);
                 rightButton.setBackground(null);
                 rightButton.setBorder(null);
-                rightButton.setFont(mainFont);
+                rightButton.setFont(materialDesignFont);
 
                 rightBound = new JPanel();
                 rightBound.setPreferredSize(new Dimension(50, height));
                 rightBound.setLayout(new BorderLayout());
-                rightBound.setBackground(white);
+                rightBound.setBackground(null);
                 rightBound.add(rightButton, BorderLayout.CENTER);
 
                 // > Left bound with button ----------------------------------------
-                leftButton = new JButton("<");
+                leftButton = new JButton("\ue314");
                 leftButton.setForeground(black);
                 leftButton.setBackground(null);
                 leftButton.setBorder(null);
-                leftButton.setFont(mainFont);
+                leftButton.setFont(materialDesignFont);
 
                 leftBound = new JPanel();
                 leftBound.setPreferredSize(new Dimension(50, height));
                 leftBound.setLayout(new BorderLayout());
-                leftBound.setBackground(white);
+                leftBound.setBackground(null);
                 leftBound.add(leftButton, BorderLayout.CENTER);
 
                 // >> Top part ------------------------------------------------------
@@ -144,7 +164,7 @@ public class MainUI {
                 top = new JPanel();
                 top.setPreferredSize(new Dimension(440, 100));
                 top.setBorder(null);
-                top.setBackground(white);
+                top.setBackground(null);
                 top.setLayout(new BorderLayout());
                 top.add(h_petName, BorderLayout.NORTH);
                 top.add(h_petAge, BorderLayout.SOUTH);
@@ -152,7 +172,7 @@ public class MainUI {
                 // >> Center Part ---------------------------------------------------
                 center = new JPanel();
                 center.setPreferredSize(new Dimension(440, 300));
-                center.setBackground(Color.PINK);
+                center.setBackground(null);
                 
                 // >> Bottom Part ---------------------------------------------------
 
@@ -185,28 +205,25 @@ public class MainUI {
                 
                 // >>> Bar Panel
                 // >>>> Health Bar
-                healthBar = new JProgressBar();
+                healthBar = new RoundedProgressBar();
                 healthBar.setPreferredSize(new Dimension(400, 30));
                 // healthBar.setBorder(null);
-                healthBar.setUI(new RoundedProgressBarUI(20));
                 healthBar.setForeground(green);
                 healthBar.setBackground(grey);
                 healthBar.setValue(50);
 
                 // >>>> Hunger Bar
-                hungerBar = new JProgressBar();
+                hungerBar = new RoundedProgressBar();
                 hungerBar.setPreferredSize(new Dimension(400, 30));
-                // hungerBar.setBorder(null);
-                hungerBar.setUI(new RoundedProgressBarUI(20));
+                hungerBar.setBorder(null);
                 hungerBar.setForeground(red);
                 hungerBar.setBackground(grey);
                 hungerBar.setValue(50);
 
                 // >>>> Thrirst Bar
-                thrirstBar = new JProgressBar();
+                thrirstBar = new RoundedProgressBar();
                 thrirstBar.setPreferredSize(new Dimension(400, 30));
                 // thrirstBar.setBorder(null);
-                thrirstBar.setUI(new RoundedProgressBarUI(20));
                 thrirstBar.setForeground(blue);
                 thrirstBar.setBackground(grey);
                 thrirstBar.setValue(50);
@@ -226,7 +243,7 @@ public class MainUI {
                     JTextField bullet = new JTextField("⦁");
                     bullet.setHorizontalAlignment(JTextField.CENTER);
                     bullet.setPreferredSize(new Dimension(11,11));
-                    bullet.setEditable(false);
+                    bullet.setEnabled(false);
                     bullet.setFont(mainFont);
                     bullet.setDisabledTextColor(grey);
                     bullet.setBackground(null);
@@ -250,7 +267,7 @@ public class MainUI {
                 bottom.setPreferredSize(new Dimension(440, 220));
                 bottom.setLayout(new BorderLayout());
                 bottom.setAlignmentY(JPanel.CENTER_ALIGNMENT);
-                bottom.setBackground(white);
+                bottom.setBackground(null);
                 bottom.add(barPanel, BorderLayout.NORTH);
                 bottom.add(buttonPanel , BorderLayout.CENTER);
                 bottom.add(bulletPanel, BorderLayout.SOUTH);
