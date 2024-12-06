@@ -36,11 +36,40 @@ public class PetRepositoriesImp implements PetRepositories{
 
     @Override
     public void getInformation(Pet pet) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        
     }
 
     public List<Pet> getPetList() {
         return petList;
     }
 
+    @Override
+    public double getPetHealth(Pet pet) {
+        return pet.getHealth();
+    }
+
+    @Override
+    public double getPetEnergy(Pet pet) {
+        return pet.getEnergy();
+    }
+
+    @Override
+    public double getPetHunger(Pet pet) {
+        return pet.getHunger();
+    }
+
+    @Override
+    public double getPetThrirst(Pet pet) {
+        return pet.getThirst();
+    }
+
+    @Override
+    public double getPetCleanness(Pet pet) {
+        return pet.getCleanness();
+    }
+
+    @Override
+    public double getPetHappiness(Pet pet) {
+        return pet.getHappiness();
+    }
 }

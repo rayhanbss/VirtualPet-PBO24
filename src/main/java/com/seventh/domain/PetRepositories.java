@@ -9,7 +9,13 @@ public interface PetRepositories {
     public void action(Pet pet, int type);
 
     // Read
-    public boolean  getPetHealth(Pet pet);
+    public double getPetHealth(Pet pet);
+    public double getPetEnergy(Pet pet);
+    public double getPetHunger(Pet pet);
+    public double getPetThrirst(Pet pet);
+    public double getPetHappiness(Pet pet);
+    public double getPetCleanness(Pet pet);
+    
     public void getInformation(Pet pet);
     // Delete ?
 }
