@@ -1,121 +1,146 @@
 package com.seventh.entities;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import com.seventh.domain.Action;
 
-public abstract class Pet {
+public class Pet implements Action {
 
     private final String name;
     private final LocalDate birthDate;
     private String age;
-    
+
     protected final double MAX_HEALTH;
-    private final static double  DOG_MAX_HEALTH = 100;
-    private final static double  CAT_MAX_HEALTH = 70;
-    private final static double  HAMSTER_MAX_HEALTH = 50;
-    
-    private final double MAX_STATS = 100;
+    private static final double DOG_MAX_HEALTH = 100;
+    private static final double CAT_MAX_HEALTH = 70;
+    private static final double HAMSTER_MAX_HEALTH = 50;
+
+    private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
     protected boolean isDead, isSick, isTired, isHungry, isThristy, isSad, isDirty;
-    
-    public Pet(String name, double upperBound){
+
+    public Pet(String name, double upperBound) {
         this.name = name;
         this.birthDate = LocalDate.now();
-        
-        // status upper bounds
         this.MAX_HEALTH = upperBound;
-        
-        //status set status level
-        health = MAX_HEALTH;
-        energy = 100;
-        hunger = thirst = happiness = cleanness = 80;
-        
-        // negative effects
-        this.isTired = this.isHungry = this.isThristy = 
-        this.isSad = this.isDirty = false;
+
+        // Initialize stats
+        this.health = MAX_HEALTH;
+        this.energy = 100;
+        this.hunger = this.thirst = this.happiness = this.cleanness = 80;
+
+        // Initialize negative effects
+        resetNegativeEffects();
     }
-    
-    // updateAge
+
+    private void resetNegativeEffects() {
+        isDead = isSick = isTired = isHungry = isThristy = isSad = isDirty = false;
+    }
+
+    // Update age
     public void updateAge() {
-        LocalDate currentDate = LocalDate.now();
-        double calAgeInDays = ChronoUnit.DAYS.between(birthDate, currentDate) / 7.0;
-        double ageInYears = calAgeInDays / 365.25;
-        double ageInWeeks = calAgeInDays / 7.0;
-        
-        if (ageInWeeks > 52) {
-            age = String.format("%.0f Weeks", ageInWeeks);
-        } else {
-            age = String.format("%.2f Years", ageInYears);
+        double days = ChronoUnit.DAYS.between(birthDate, LocalDate.now());
+        age = (days > 365.25) 
+            ? String.format("%.2f Years", days / 365.25)
+            : String.format("%.0f Weeks", days / 7);
+    }
+
+    // General setter for stats
+    private void updateStat(String stat, double amount, double max) {
+        switch (stat) {
+            case "health" -> health = Math.min(health + amount, max);
+            case "energy" -> energy = Math.min(energy + amount, max);
+            case "hunger" -> hunger = Math.min(hunger + amount, max);
+            case "thirst" -> thirst = Math.min(thirst + amount, max);
+            case "happiness" -> happiness = Math.min(happiness + amount, max);
+            case "cleanness" -> cleanness = Math.min(cleanness + amount, max);
         }
     }
-    
-    // Setter for status
-    public void setHealth(double amount){
-        health =  Math.min(health + amount, MAX_HEALTH);
+
+    // Negative effect setters
+    protected  void updateEffect(String effect, boolean condition) {
+        switch (effect) {
+            case "dead" -> isDead = condition;
+            case "sick" -> isSick = condition;
+            case "tired" -> isTired = condition;
+            case "hungry" -> isHungry = condition;
+            case "thirsty" -> isThristy = condition;
+            case "sad" -> isSad = condition;
+            case "dirty" -> isDirty = condition;
+        }
     }
-    public void setEnergy(double amount){
-        energy = Math.min(energy + amount, MAX_STATS);
+
+    public void updateNegativeEffects() {
+        updateEffect("dead", health == 0);
+        updateEffect("sick", health < 50);
+        updateEffect("tired", energy < 60);
+        updateEffect("hungry", hunger < 80);
+        updateEffect("thirsty", thirst < 70);
+        updateEffect("sad", happiness < 60);
+        updateEffect("dirty", cleanness < 7);
     }
-    public void setHunger(double amount){
-        hunger = Math.min(hunger + amount, MAX_STATS);
+
+    // Status update method
+    @Override
+    public void updateStatus() {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            updateAge();
+            updateStat("hunger", -0.2, MAX_STATS);
+            updateStat("thirst", -0.5, MAX_STATS);
+            updateStat("happiness", -0.25, MAX_STATS);
+            updateStat("cleanness", -0.1, MAX_STATS);
+            updateNegativeEffects();
+        };
+        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
     }
-    public void setThirst(double amount){
-        thirst = Math.min(thirst + amount, MAX_STATS);
+
+    // Implement actions
+    @Override
+    public void giveFood() {
+        updateStat("hunger", 5, MAX_STATS); 
+        updateStat("energy", -2, MAX_STATS); 
     }
-    public void setHappiness(double amount){
-        happiness = Math.min(happiness + amount, MAX_STATS);
+    @Override
+    public void giveDrink() { 
+        updateStat("thirst", 5, MAX_STATS); 
+        updateStat("energy", -2, MAX_STATS); 
+        }
+    @Override
+    public void playWith() { 
+        updateStat("happiness", 15, MAX_STATS); 
+        updateStat("energy", -15, MAX_STATS); 
     }
-    public void setCleanness(double amount){
-        cleanness = Math.min(cleanness + amount, MAX_STATS);
-    }
-    
-    // Setter for negative effects
-    public void setDead(){
-        isDead = (health == 0);
-    }
-    public void setSick(double lowerBounds){
-        isSick = (health < lowerBounds);
-    }
-    public void setTired(double lowerBounds){
-        isTired = (energy < lowerBounds);
-    }
-    public void setHungry(double lowerBounds){
-        isHungry = (hunger < lowerBounds);
-    }
-    public void setThrirsty(double lowerBounds){
-        isThristy = (thirst < lowerBounds);
-    }
-    public void setSad(double lowerBounds){
-        isSad = (happiness < lowerBounds);
-    }
-    public void setDirty(double lowerBounds){
-        isDirty = (cleanness < lowerBounds);
-    }
-    
-    // Getter pet info
-    public String getName(){return name;}
-    public String getAge(){return age;}
-    public LocalDate getBirthDate(){return birthDate;}
-    
-    // Getter health for each pet type
-    public static double DOG_MAX_HEALTH() {return DOG_MAX_HEALTH;}
-    public static double CAT_MAX_HEALTH() {return CAT_MAX_HEALTH;}
-    public static double HAMSTER_MAX_HEALTH() {return HAMSTER_MAX_HEALTH;}
-    
-    // Getter status level
-    public double getHealth(){return health;}
-    public double getEnergy(){return energy;}
-    public double getHunger(){return hunger;}
-    public double getThirst(){return thirst;}
-    public double getHappiness(){return happiness;}
-    public double getCleanness(){return cleanness;}
-    
-    // Getter negative effects
-    public boolean getDead(){return isDead;}
-    public boolean getSick(){return isSick;}
-    public boolean getTired(){return isTired;}
-    public boolean getHungry(){return isHungry;}
-    public boolean getThrirsty(){return isThristy;}
-    public boolean getSad(){return isSad;}
-    public boolean getDirty(){return isDirty;}
+    @Override
+    public void takeNap() { updateStat("energy", 20, MAX_STATS); }
+    @Override
+    public void clean() { updateStat("cleanness", 15, MAX_STATS); }
+    @Override
+    public void goToVet() { updateStat("health", 50, MAX_HEALTH); }
+
+    // Getters
+    public String getName() { return name; }
+    public String getAge() { return age; }
+    public LocalDate getBirthDate() { return birthDate; }
+    public double getHealth() { return health; }
+    public double getEnergy() { return energy; }
+    public double getHunger() { return hunger; }
+    public double getThirst() { return thirst; }
+    public double getHappiness() { return happiness; }
+    public double getCleanness() { return cleanness; }
+    public boolean isDead() { return isDead; }
+    public boolean isSick() { return isSick; }
+    public boolean isTired() { return isTired; }
+    public boolean isHungry() { return isHungry; }
+    public boolean isThirsty() { return isThristy; }
+    public boolean isSad() { return isSad; }
+    public boolean isDirty() { return isDirty; }
+
+    public static double getDogMaxHealth() { return DOG_MAX_HEALTH; }
+    public static double getCatMaxHealth() { return CAT_MAX_HEALTH; }
+    public static double getHamsterMaxHealth() { return HAMSTER_MAX_HEALTH; }
 }
