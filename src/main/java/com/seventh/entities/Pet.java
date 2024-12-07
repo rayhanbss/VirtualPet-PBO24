@@ -2,9 +2,6 @@ package com.seventh.entities;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import com.seventh.domain.Action;
 
@@ -26,12 +23,12 @@ public class Pet implements Action {
     public Pet(String name, double upperBound) {
         this.name = name;
         this.birthDate = LocalDate.now();
-        this.MAX_HEALTH = upperBound;
+        this.age = "Just Born";
+        this.MAX_HEALTH = upperBound > 0 ? upperBound : 100;
 
         // Initialize stats
         this.health = MAX_HEALTH;
-        this.energy = 100;
-        this.hunger = this.thirst = this.happiness = this.cleanness = 80;
+        this.energy = this.hunger = this.thirst = this.happiness = this.cleanness = MAX_STATS;
 
         // Initialize negative effects
         resetNegativeEffects();
@@ -43,21 +40,25 @@ public class Pet implements Action {
 
     // Update age
     public void updateAge() {
-        double days = ChronoUnit.DAYS.between(birthDate, LocalDate.now());
-        age = (days > 365.25) 
-            ? String.format("%.2f Years", days / 365.25)
-            : String.format("%.0f Weeks", days / 7);
+        double week = ChronoUnit.DAYS.between(birthDate, LocalDate.now());
+        if(isDead) {
+            age = "Dead";
+        }else if (week > 52) {
+            age = String.format("%.2f Years", week / 52);
+        } else {
+            age = String.format("%.0f Weeks", week);
+        } 
     }
 
     // General setter for stats
     private void updateStat(String stat, double amount, double max) {
         switch (stat) {
-            case "health" -> health = Math.min(health + amount, max);
-            case "energy" -> energy = Math.min(energy + amount, max);
-            case "hunger" -> hunger = Math.min(hunger + amount, max);
-            case "thirst" -> thirst = Math.min(thirst + amount, max);
-            case "happiness" -> happiness = Math.min(happiness + amount, max);
-            case "cleanness" -> cleanness = Math.min(cleanness + amount, max);
+            case "health" -> health = Math.max(Math.min(health + amount, max), 0 );
+            case "energy" -> energy = Math.max(Math.min(energy + amount, max), 0 );
+            case "hunger" -> hunger = Math.max(Math.min(hunger + amount, max), 0 );
+            case "thirst" -> thirst = Math.max(Math.min(thirst + amount, max), 0 );
+            case "happiness" -> happiness = Math.max(Math.min(happiness + amount, max), 0 );
+            case "cleanness" -> cleanness = Math.max(Math.min(cleanness + amount, max), 0 );
         }
     }
 
@@ -75,28 +76,28 @@ public class Pet implements Action {
     }
 
     public void updateNegativeEffects() {
-        updateEffect("dead", health == 0);
+        
+        updateEffect("dead", health <= 0);
         updateEffect("sick", health < 50);
         updateEffect("tired", energy < 60);
         updateEffect("hungry", hunger < 80);
         updateEffect("thirsty", thirst < 70);
         updateEffect("sad", happiness < 60);
-        updateEffect("dirty", cleanness < 7);
+        updateEffect("dirty", cleanness < 70);
     }
 
     // Status update method
     @Override
     public void updateStatus() {
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        Runnable task = () -> {
-            updateAge();
-            updateStat("hunger", -0.2, MAX_STATS);
-            updateStat("thirst", -0.5, MAX_STATS);
-            updateStat("happiness", -0.25, MAX_STATS);
-            updateStat("cleanness", -0.1, MAX_STATS);
-            updateNegativeEffects();
-        };
-        scheduler.scheduleAtFixedRate(task, 0, 1, TimeUnit.MINUTES);
+        updateNegativeEffects();
+        updateAge();
+        if(isDead) energy = hunger = thirst = happiness = cleanness = 0;
+        if(isHungry || isThristy || isTired) updateStat("health", -0.1, MAX_HEALTH);
+        if(isSick) updateStat("health", -0.2, MAX_HEALTH);
+        updateStat("hunger", -0.2, MAX_STATS);
+        updateStat("thirst", -0.2, MAX_STATS);
+        updateStat("happiness", -0.25, MAX_STATS);
+        updateStat("cleanness", -0.1, MAX_STATS);
     }
 
     // Implement actions
@@ -114,6 +115,7 @@ public class Pet implements Action {
     public void playWith() { 
         updateStat("happiness", 15, MAX_STATS); 
         updateStat("energy", -15, MAX_STATS); 
+        updateStat("cleanness", -20, MAX_STATS);
     }
     @Override
     public void takeNap() { updateStat("energy", 20, MAX_STATS); }
@@ -140,6 +142,7 @@ public class Pet implements Action {
     public boolean isSad() { return isSad; }
     public boolean isDirty() { return isDirty; }
 
+    public double getMaxHealth () { return MAX_HEALTH; };
     public static double getDogMaxHealth() { return DOG_MAX_HEALTH; }
     public static double getCatMaxHealth() { return CAT_MAX_HEALTH; }
     public static double getHamsterMaxHealth() { return HAMSTER_MAX_HEALTH; }

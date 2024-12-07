@@ -19,16 +19,19 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
+import com.seventh.entities.Pet;
+import com.seventh.repositories.PetRepositoriesImp;
 import com.seventh.util.FontLoader;
 
 public class MainUI {
-    // private PetRepositoriesImp petRepositoriesImp;
-    // private Pet currentPet;
+    private PetRepositoriesImp petRepositoriesImp;
+    private Pet currentPet;
     private int currentIndex;
     private int cardLength;
 
@@ -36,7 +39,6 @@ public class MainUI {
     JFrame frame;
     
     CardLayout cardLayout;
-    PetCardUI petCard;
     AddCardUI addCard;
 
     JPanel main, top, middle, bottom;
@@ -50,16 +52,15 @@ public class MainUI {
     
     Color black = new Color(29,29,29);
     FontLoader fontLoader;
-    Font mainFont, subFont, buttonIcon, buttonFocusedIcon;
+    Font mainFont, subFont, buttonIcon;
 
     private final int width = 540;
     private final int height = 720;
 
     public MainUI(){
-        // petRepositoriesImp = new PetRepositoriesImp();
-        // currentPet = petRepositoriesImp.getPetList().getFirst();
+        petRepositoriesImp = new PetRepositoriesImp();
+        cardLength = 1;
         currentIndex = 0;
-        cardLength = 2;
 
         dark = new FlatMacDarkLaf();
         light = new FlatMacLightLaf();
@@ -71,12 +72,6 @@ public class MainUI {
             buttonIcon, 
             "src/main/resources/MaterialSymbolsRounded.ttf",
             36f
-        );
-
-        buttonFocusedIcon = fontLoader.load(
-            buttonFocusedIcon, 
-            "src/main/resources/MaterialSymbolsRounded.ttf",
-            48f
         );
 
         try {
@@ -101,11 +96,6 @@ public class MainUI {
                 rightButton.setBorder(null);
                 rightButton.setFont(buttonIcon);
                 mouseListener(rightButton);
-                rightButton.addActionListener((ActionEvent e) -> {
-                    cardLayout.next(middle);
-                    currentIndex = (currentIndex + 1) % cardLength;
-                    updateBullets();
-                });
                 
                 
                 rightBound = new JPanel();
@@ -125,11 +115,6 @@ public class MainUI {
                 leftButton.setBorder(null);
                 leftButton.setFont(buttonIcon);
                 mouseListener(leftButton);
-                leftButton.addActionListener((ActionEvent e) -> {
-                    cardLayout.previous(middle);
-                    currentIndex = (currentIndex - 1 + cardLength) % cardLength;
-                    updateBullets();
-                });
                 
                 leftBound = new JPanel();
                 leftBound.setPreferredSize(new Dimension(50, height));
@@ -145,9 +130,9 @@ public class MainUI {
                 main.setLayout(new BorderLayout());
 
                 // >> Top part ------------------------------------------------------
-        
+                
                 // >>> Pet Name
-                petName = new JTextField("Pet Name");
+                petName = new JTextField("Add Pet");
                 petName.setHorizontalAlignment(JTextField.CENTER);
                 petName.setDisabledTextColor(black);
                 petName.setBorder(null);
@@ -162,7 +147,7 @@ public class MainUI {
                 h_petName.add(petName, BorderLayout.SOUTH);
                 
                 // >>> Pet Age
-                petAge = new JTextField("?? Month ?? Years");
+                petAge = new JTextField("");
                 petAge.setHorizontalAlignment(JTextField.CENTER);
                 petAge.setDisabledTextColor(black);
                 petAge.setBorder(null);
@@ -184,33 +169,21 @@ public class MainUI {
                 top.setLayout(new BorderLayout());
                 top.add(h_petName, BorderLayout.NORTH);
                 top.add(h_petAge, BorderLayout.SOUTH);
-
+                
                 // Midle
                 // > Card ---------------------------------------------------------
-                petCard = new PetCardUI();
-                addCard = new AddCardUI();
-
+                
                 middle = new JPanel();
                 middle.setPreferredSize(new Dimension(440, 570));
                 middle.setLayout(cardLayout);
                 middle.setBackground(null);
-                middle.add(petCard, "PetCard");
+
+                addCard = new AddCardUI(petRepositoriesImp, this, middle);
                 middle.add(addCard, "AddCard");
 
                 // Bottom
                 // >>> Bullet
                 bullets = new ArrayList<>();
-                for(int i = 0; i < cardLength; i++){
-                    JTextField bullet = new JTextField("⦁");
-                    bullet.setHorizontalAlignment(JTextField.CENTER);
-                    bullet.setPreferredSize(new Dimension(11,11));
-                    bullet.setEnabled(false);
-                    bullet.setFont(mainFont);
-                    bullet.setDisabledTextColor(Color.GRAY);
-                    bullet.setBackground(null);
-                    bullet.setBorder(null);
-                    bullets.add(bullet);
-                }
                 
                 bottom = new JPanel();
                 bottom.setLayout(new FlowLayout());
@@ -219,36 +192,127 @@ public class MainUI {
                 bottom.setBorder(null);
                 bottom.setAlignmentX(JPanel.CENTER_ALIGNMENT);
                 bottom.setAlignmentY(JPanel.CENTER_ALIGNMENT);
-                for(JTextField bullet : bullets){
-                bottom.add(bullet);
+                updateCardNavigation();
+            
+            main.add(top, BorderLayout.NORTH);
+            main.add(middle, BorderLayout.CENTER);
+            main.add(bottom, BorderLayout.SOUTH);
+            
+            frame.add(leftBound, BorderLayout.WEST);
+            frame.add(main, BorderLayout.CENTER);
+            frame.add(rightBound, BorderLayout.EAST);
+            frame.setVisible(true);
+
+            rightButton.addActionListener((ActionEvent e) -> {
+                cardLayout.next(middle);
+                cardLength = petRepositoriesImp.getPetList().size() + 1;
+                currentIndex = (currentIndex + 1) % cardLength;
+                
+                if(currentIndex == 0){
+                    petName.setText("Add Pet");
+                    petAge.setText("");
+                } else {
+                    // Pastikan ada pet sebelum mencoba mengakses
+                    if (currentIndex - 1 < petRepositoriesImp.getPetList().size()) {
+                        currentPet = petRepositoriesImp.getPetList().get(currentIndex - 1);
+                        petName.setText(currentPet.getName());
+                        petAge.setText(currentPet.getAge());
+                    }
                 }
-
-                main.add(top, BorderLayout.NORTH);
-                main.add(middle, BorderLayout.CENTER);
-                main.add(bottom, BorderLayout.SOUTH);
-
-                frame.add(leftBound, BorderLayout.WEST);
-                frame.add(main, BorderLayout.CENTER);
-                frame.add(rightBound, BorderLayout.EAST);
-                frame.setVisible(true);
+                updateCardNavigation();
+                updateBullets();
             });
-        } catch (UnsupportedLookAndFeelException e) {
+            
+            leftButton.addActionListener((ActionEvent e) -> {
+                cardLayout.previous(middle);
+                cardLength = petRepositoriesImp.getPetList().size() + 1;
+                currentIndex = (currentIndex - 1 + cardLength) % cardLength;
+                
+                if(currentIndex == 0){
+                    petName.setText("Add Pet");
+                    petAge.setText("");
+                } else {
+                    // Pastikan ada pet sebelum mencoba mengakses
+                    if (currentIndex - 1 < petRepositoriesImp.getPetList().size()) {
+                        currentPet = petRepositoriesImp.getPetList().get(currentIndex - 1);
+                        petName.setText(currentPet.getName());
+                        petAge.setText(currentPet.getAge());
+                    }
+                }
+                updateCardNavigation();
+                updateBullets();
+
+            });
+
+            
+            Timer timer = new Timer(1000, e -> {
+                if(currentPet != null){
+                    petAge.setText(currentPet.getAge());
+                    System.out.println(currentPet.getAge());
+                }
+            });
+            timer.start();
+            
+            
+        });
+    } catch (UnsupportedLookAndFeelException e) {
             System.out.println("Look and feel error");
         }
         
     }
 
     private void updateBullets() {
-        for (int i = 0; i < bullets.size(); i++) {
-            bullets.get(i).setDisabledTextColor(i == cardLength ? Color.BLACK : Color.GRAY);
+        // Ensure the current index is within bounds
+        if (currentIndex < 0 || currentIndex >= bullets.size()) {
+            currentIndex = 0;
         }
+        
+        // Update bullet colors
+        for (int i = 0; i < bullets.size(); i++) {
+            JTextField bullet = bullets.get(i);
+            
+            // Highlight the current bullet
+            if (i == currentIndex) {
+                bullet.setDisabledTextColor(Color.BLACK);
+                bullet.setText("\ue837");
+            } else {
+                bullet.setDisabledTextColor(Color.GRAY);
+            }
+        }
+    }
+
+    protected  void updateCardNavigation() {
+        cardLength = petRepositoriesImp.getPetList().size() + 1;
+        
+        // Hapus bullets lama
+        bottom.removeAll();
+        bullets.clear();
+        
+        // Buat bullets baru
+        for(int i = 0; i < cardLength; i++){
+            JTextField bullet = new JTextField("\ue836");
+            bullet.setHorizontalAlignment(JTextField.CENTER);
+            bullet.setPreferredSize(new Dimension(15,11));
+            bullet.setEnabled(false);
+            bullet.setFont(buttonIcon.deriveFont(12f));
+            bullet.setDisabledTextColor(Color.GRAY);
+            bullet.setBackground(null);
+            bullet.setBorder(null);
+            bullets.add(bullet);
+            bottom.add(bullet);
+        }
+        
+        bottom.revalidate();
+        bottom.repaint();
+        
+        updateBullets();
     }
 
     private void mouseListener(JButton button){
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setFont(buttonFocusedIcon);
+                button.setFont(buttonIcon.deriveFont(48f));
             }
 
             @Override

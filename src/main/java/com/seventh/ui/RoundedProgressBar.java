@@ -8,8 +8,8 @@ import java.awt.geom.RoundRectangle2D;
 import javax.swing.JProgressBar;
 
 public class RoundedProgressBar extends JProgressBar {
-    private int arcWidth = 30;
-    private int arcHeight = 30;
+    private int arcWidth = 10;
+    private int arcHeight = 10;
 
     public RoundedProgressBar() {
         setOpaque(false);
