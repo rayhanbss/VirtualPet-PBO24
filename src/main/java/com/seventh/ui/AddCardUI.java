@@ -24,18 +24,11 @@ import com.seventh.repositories.PetRepositoriesImp;
 import com.seventh.util.FontLoader;
 
 public class AddCardUI extends JPanel {
-    MainUI mainUI;
-    PetRepositoriesImp petRepositoriesImp;
-    JPanel cardPanel;
     FontLoader fontLoader;
     Font buttonIcon;
-
     JButton addButton;
 
     public AddCardUI(PetRepositoriesImp petRepositoriesImp, MainUI mainUI, JPanel cardPanel) {
-        this.mainUI = mainUI;
-        this.petRepositoriesImp = petRepositoriesImp;
-        this.cardPanel = cardPanel;
         fontLoader = new FontLoader();
 
         buttonIcon = fontLoader.load(
@@ -67,7 +60,7 @@ public class AddCardUI extends JPanel {
         this.add(addButton);
         this.add(Box.createVerticalGlue());
 
-        addButton.addActionListener((ActionEvent e) -> {
+        addButton.addActionListener((ActionEvent _) -> {
             // Membuat panel untuk input nama dan tipe hewan
             JPanel panel = new JPanel();
             panel.setPreferredSize(new Dimension(240, 60));

@@ -21,18 +21,6 @@ public class PetRepositoriesImp implements PetRepositories{
         petList.add(newPet);
     }
 
-    @Override
-    public void action(Pet pet, int type) {
-        switch (type) {
-            case 1 -> pet.goToVet();
-            case 2 -> pet.giveFood();
-            case 3 -> pet.giveDrink();
-            case 4 -> pet.playWith();
-            case 5 -> pet.takeNap();
-            case 6 -> pet.clean();
-            default -> throw new AssertionError();
-        }
-    }
 
     @Override
     public void getInformation(Pet pet) {

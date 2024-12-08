@@ -17,13 +17,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import com.formdev.flatlaf.themes.FlatMacDarkLaf;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.seventh.entities.Pet;
 import com.seventh.repositories.PetRepositoriesImp;
@@ -35,7 +33,6 @@ public class MainUI {
     private int currentIndex;
     private int cardLength;
 
-    LookAndFeel dark, light;
     JFrame frame;
     
     CardLayout cardLayout;
@@ -62,9 +59,6 @@ public class MainUI {
         cardLength = 1;
         currentIndex = 0;
 
-        dark = new FlatMacDarkLaf();
-        light = new FlatMacLightLaf();
-
         fontLoader = new FontLoader();
         mainFont = new Font("Open Sans",Font.BOLD, 24);
         subFont = new Font("Open Sans",Font.PLAIN, 12);
@@ -75,7 +69,7 @@ public class MainUI {
         );
 
         try {
-            UIManager.setLookAndFeel(light);  // Or use FlatDarkLaf()
+            UIManager.setLookAndFeel(new FlatMacLightLaf());
             // Create and display your GUI
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("Virtual Pet");
@@ -203,7 +197,7 @@ public class MainUI {
             frame.add(rightBound, BorderLayout.EAST);
             frame.setVisible(true);
 
-            rightButton.addActionListener((ActionEvent e) -> {
+            rightButton.addActionListener((ActionEvent _) -> {
                 cardLayout.next(middle);
                 cardLength = petRepositoriesImp.getPetList().size() + 1;
                 currentIndex = (currentIndex + 1) % cardLength;
@@ -223,7 +217,7 @@ public class MainUI {
                 updateBullets();
             });
             
-            leftButton.addActionListener((ActionEvent e) -> {
+            leftButton.addActionListener((ActionEvent _) -> {
                 cardLayout.previous(middle);
                 cardLength = petRepositoriesImp.getPetList().size() + 1;
                 currentIndex = (currentIndex - 1 + cardLength) % cardLength;
@@ -245,10 +239,9 @@ public class MainUI {
             });
 
             
-            Timer timer = new Timer(1000, e -> {
+            Timer timer = new Timer(60000, _ -> {
                 if(currentPet != null){
                     petAge.setText(currentPet.getAge());
-                    System.out.println(currentPet.getAge());
                 }
             });
             timer.start();
