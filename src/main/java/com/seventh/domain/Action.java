@@ -1,6 +1,7 @@
 package com.seventh.domain;
 
 public interface Action {
+    public void action(int type);
     public void updateStatus();
     public void goToVet();          // incrase health
     public void giveFood();         // incrase hunger

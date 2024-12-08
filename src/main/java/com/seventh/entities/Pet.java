@@ -12,11 +12,11 @@ public class Pet implements Action {
     private String age;
 
     protected final double MAX_HEALTH;
-    private static final double DOG_MAX_HEALTH = 100;
-    private static final double CAT_MAX_HEALTH = 70;
-    private static final double HAMSTER_MAX_HEALTH = 50;
-    private static final double PARROT_MAX_HEALTH = 70;
-    private static final double TURTLE_MAX_HEALTH = 70;
+    private static final double LARGE_MAX_HEALTH = 100;
+    private static final double MEDIUM_MAX_HEALTH = 70;
+    private static final double SMALL_MAX_HEALTH = 50;
+
+
 
     private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
@@ -102,6 +102,8 @@ public class Pet implements Action {
         updateStat("cleanness", -0.1, MAX_STATS);
     }
 
+
+    
     // Implement actions
     @Override
     public void giveFood() {
@@ -120,11 +122,24 @@ public class Pet implements Action {
         updateStat("cleanness", -20, MAX_STATS);
     }
     @Override
-    public void takeNap() { updateStat("energy", 20, MAX_STATS); }
+    public void takeNap() { updateStat("energy", 100, MAX_STATS); }
     @Override
-    public void clean() { updateStat("cleanness", 15, MAX_STATS); }
+    public void clean() { updateStat("cleanness", 100, MAX_STATS); }
     @Override
-    public void goToVet() { updateStat("health", 50, MAX_HEALTH); }
+    public void goToVet() { if(health > 0) updateStat("health", 50, MAX_HEALTH); }
+
+    @Override
+    public void action(int type) {
+        switch (type) {
+            case 1 -> goToVet();
+            case 2 -> giveFood();
+            case 3 -> giveDrink();
+            case 4 -> playWith();
+            case 5 -> takeNap();
+            case 6 -> clean();
+            default -> throw new AssertionError();
+        }
+    }
 
     // Getters
     public String getName() { return name; }
@@ -145,9 +160,8 @@ public class Pet implements Action {
     public boolean isDirty() { return isDirty; }
 
     public double getMaxHealth () { return MAX_HEALTH; };
-    public static double getDogMaxHealth() { return DOG_MAX_HEALTH; }
-    public static double getCatMaxHealth() { return CAT_MAX_HEALTH; }
-    public static double getHamsterMaxHealth() { return HAMSTER_MAX_HEALTH; }
-    public static double getParrotMaxHealth() { return PARROT_MAX_HEALTH; }
-    public static double getTurtleMaxHealth() { return TURTLE_MAX_HEALTH; }
+    public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
+    public static double getMediumMaxHealth() { return MEDIUM_MAX_HEALTH; }
+    public static double getSmallMaxHealth() { return SMALL_MAX_HEALTH; }
+
 }

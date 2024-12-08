@@ -5,8 +5,6 @@ import com.seventh.entities.Pet;
 public interface PetRepositories {
     // Create
     public void createPet(String name, int type);
-    // Update
-    public void action(Pet pet, int type);
 
     // Read
     public double getPetHealth(Pet pet);
