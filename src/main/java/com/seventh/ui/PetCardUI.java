@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -25,6 +26,8 @@ public class PetCardUI extends JPanel{
     Font buttonIcon;
     
     JPanel main;
+    JPanel petPanel, effectsPanel;
+    negativeEffectUI[] negativeEffectUIs;
 
     JPanel buttonPanel;
     JButton vet, food, drink, play, nap, clean;
@@ -60,6 +63,18 @@ public class PetCardUI extends JPanel{
         main = new JPanel();
         main.setPreferredSize(new Dimension(440, 400));
         main.setBackground(null);
+
+        petPanel = new JPanel();
+        petPanel.setPreferredSize(new Dimension(440, 350));
+        petPanel.setBackground(null);
+        
+        effectsPanel = new JPanel();
+        effectsPanel.setPreferredSize(new Dimension(440, 350));
+        effectsPanel.setBackground(null);
+        negativeEffectUIs = new negativeEffectUI[7];
+        for (int i = 0; i < 7; i++) {
+            negativeEffectUIs[i] = new negativeEffectUI(Color.RED);
+        }
         
         // >> Bottom Part ---------------------------------------------------
         
@@ -78,6 +93,13 @@ public class PetCardUI extends JPanel{
         setStyle(nap);
         setStyle(clean);
         
+        buttonListener(vet, 1);
+        buttonListener(food, 2);
+        buttonListener(drink, 3);
+        buttonListener(play, 4);
+        buttonListener(nap, 5);
+        buttonListener(clean, 6);
+
         mouseListener(vet);
         mouseListener(food);
         mouseListener(drink);
@@ -140,12 +162,34 @@ public class PetCardUI extends JPanel{
         });
         timer.start();
     }
+
+    public final void buttonListener(JButton button, int type){
+        button.addActionListener((ActionEvent e) -> {
+            pet.action(type);
+        });
+    }
     
     private void setStyle(JButton button){
         button.setPreferredSize(new Dimension(65,50));
         button.setFont(buttonIcon);
         button.setForeground(white);
         button.setBackground(buttonColor);
+    }
+
+    private void updateEffectsPanel(){
+        effectsPanel.removeAll();
+        SwingUtilities.invokeLater(() -> {
+            if(pet.isDead()){
+                effectsPanel.add(negativeEffectUIs[1]);
+            }else{
+                if(pet.isSick()) effectsPanel.add(negativeEffectUIs[2]);
+                if(pet.isTired()) effectsPanel.add(negativeEffectUIs[3]);
+                if(pet.isHungry()) effectsPanel.add(negativeEffectUIs[4]);
+                if(pet.isThirsty()) effectsPanel.add(negativeEffectUIs[5]);
+                if(pet.isSad()) effectsPanel.add(negativeEffectUIs[6]);
+                if(pet.isDirty()) effectsPanel.add(negativeEffectUIs[7]);
+            }
+        });
     }
 
     private void updateBars(){

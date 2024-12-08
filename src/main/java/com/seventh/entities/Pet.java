@@ -100,6 +100,8 @@ public class Pet implements Action {
         updateStat("cleanness", -0.1, MAX_STATS);
     }
 
+
+    
     // Implement actions
     @Override
     public void giveFood() {
@@ -123,6 +125,19 @@ public class Pet implements Action {
     public void clean() { updateStat("cleanness", 15, MAX_STATS); }
     @Override
     public void goToVet() { updateStat("health", 50, MAX_HEALTH); }
+
+    @Override
+    public void action(int type) {
+        switch (type) {
+            case 1 -> goToVet();
+            case 2 -> giveFood();
+            case 3 -> giveDrink();
+            case 4 -> playWith();
+            case 5 -> takeNap();
+            case 6 -> clean();
+            default -> throw new AssertionError();
+        }
+    }
 
     // Getters
     public String getName() { return name; }
