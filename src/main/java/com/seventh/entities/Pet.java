@@ -12,10 +12,10 @@ public class Pet implements Action {
     private String age;
 
     protected final double MAX_HEALTH;
+
     private static final double LARGE_MAX_HEALTH = 100;
     private static final double MEDIUM_MAX_HEALTH = 70;
     private static final double SMALL_MAX_HEALTH = 50;
-
 
 
     private static final double MAX_STATS = 100;
@@ -160,6 +160,7 @@ public class Pet implements Action {
     public boolean isDirty() { return isDirty; }
 
     public double getMaxHealth () { return MAX_HEALTH; };
+
     public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
     public static double getMediumMaxHealth() { return MEDIUM_MAX_HEALTH; }
     public static double getSmallMaxHealth() { return SMALL_MAX_HEALTH; }
