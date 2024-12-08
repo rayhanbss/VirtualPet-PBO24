@@ -15,6 +15,7 @@ public class Pet implements Action {
     private static final double DOG_MAX_HEALTH = 100;
     private static final double CAT_MAX_HEALTH = 70;
     private static final double HAMSTER_MAX_HEALTH = 50;
+    private static final double RABBIT_MAX_HEALTH = 70;
 
     private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
@@ -146,4 +147,5 @@ public class Pet implements Action {
     public static double getDogMaxHealth() { return DOG_MAX_HEALTH; }
     public static double getCatMaxHealth() { return CAT_MAX_HEALTH; }
     public static double getHamsterMaxHealth() { return HAMSTER_MAX_HEALTH; }
+    public static double getRabbitMaxHealth() { return RABBIT_MAX_HEALTH; }
 }
