@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import com.seventh.domain.Action;
 
 public class Pet implements Action {
-
+//ss
     private final String name;
     private final LocalDate birthDate;
     private String age;
