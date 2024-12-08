@@ -166,7 +166,7 @@ public class PetCardUI extends JPanel{
         this.add(barPanel, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        Timer statusTimer = new Timer(60000, _ -> {
+        Timer statusTimer = new Timer(100, _ -> {
             pet.updateStatus();
         });
         statusTimer.start();
@@ -174,6 +174,7 @@ public class PetCardUI extends JPanel{
         Timer barTimer = new Timer(1000, _ -> {
             updateEffectsPanel();
             updateBars();
+            updateButton();
         });
         barTimer.start();
     }
@@ -186,9 +187,19 @@ public class PetCardUI extends JPanel{
     
     private void setStyle(JButton button){
         button.setPreferredSize(new Dimension(65,50));
+        button.setEnabled(false);
         button.setFont(buttonIcon);
         button.setForeground(white);
         button.setBackground(buttonColor);
+    }
+
+    private void updateButton() {
+        vet.setEnabled(!pet.isDead() && pet.isSick());
+        food.setEnabled(!pet.isDead() && pet.isHungry());
+        drink.setEnabled(!pet.isDead() && pet.isThirsty());
+        play.setEnabled(!pet.isDead() && pet.isSad());
+        nap.setEnabled(!pet.isDead() && pet.isTired());
+        clean.setEnabled(!pet.isDead() && pet.isDirty());
     }
 
     private void updateEffectsPanel(){

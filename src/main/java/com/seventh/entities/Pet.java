@@ -120,9 +120,9 @@ public class Pet implements Action {
         updateStat("cleanness", -20, MAX_STATS);
     }
     @Override
-    public void takeNap() { updateStat("energy", 20, MAX_STATS); }
+    public void takeNap() { updateStat("energy", 100, MAX_STATS); }
     @Override
-    public void clean() { updateStat("cleanness", 15, MAX_STATS); }
+    public void clean() { updateStat("cleanness", 100, MAX_STATS); }
     @Override
     public void goToVet() { if(health > 0) updateStat("health", 50, MAX_HEALTH); }
 
