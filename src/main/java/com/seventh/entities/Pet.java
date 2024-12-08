@@ -6,7 +6,7 @@ import java.time.temporal.ChronoUnit;
 import com.seventh.domain.Action;
 
 public class Pet implements Action {
-
+//ss
     private final String name;
     private final LocalDate birthDate;
     private String age;
@@ -15,6 +15,8 @@ public class Pet implements Action {
     private static final double LARGE_MAX_HEALTH = 100;
     private static final double MEDIUM_MAX_HEALTH = 70;
     private static final double SMALL_MAX_HEALTH = 50;
+
+
 
     private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
@@ -161,4 +163,5 @@ public class Pet implements Action {
     public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
     public static double getMediumMaxHealth() { return MEDIUM_MAX_HEALTH; }
     public static double getSmallMaxHealth() { return SMALL_MAX_HEALTH; }
+
 }
