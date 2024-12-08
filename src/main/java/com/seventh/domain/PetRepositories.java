@@ -13,7 +13,4 @@ public interface PetRepositories {
     public double getPetThrirst(Pet pet);
     public double getPetHappiness(Pet pet);
     public double getPetCleanness(Pet pet);
-    
-    public void getInformation(Pet pet);
-    // Delete ?
 }

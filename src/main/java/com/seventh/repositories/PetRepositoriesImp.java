@@ -5,8 +5,12 @@ import java.util.List;
 
 import com.seventh.domain.PetRepositories;
 import com.seventh.entities.Cat;
+import com.seventh.entities.Dog;
+import com.seventh.entities.Hamster;
+import com.seventh.entities.Parrot;
 import com.seventh.entities.Pet;
-
+import com.seventh.entities.Rabbit;
+import com.seventh.entities.Turtle;
 public class PetRepositoriesImp implements PetRepositories{
     private final List<Pet> petList = new ArrayList<>();
 
@@ -16,15 +20,14 @@ public class PetRepositoriesImp implements PetRepositories{
         Pet newPet;
         switch (type) {
             case 1 -> newPet = new Cat(name);
+            case 2 -> newPet = new Dog(name);
+            case 3 -> newPet = new Hamster(name);
+            case 4 -> newPet = new Parrot(name);
+            case 5 -> newPet = new Rabbit(name);
+            case 6 -> newPet = new Turtle(name);
             default -> throw new AssertionError();
         }
         petList.add(newPet);
-    }
-
-
-    @Override
-    public void getInformation(Pet pet) {
-        
     }
 
     public List<Pet> getPetList() {

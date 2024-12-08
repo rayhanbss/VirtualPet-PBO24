@@ -72,7 +72,7 @@ public class AddCardUI extends JPanel {
 
             // Label dan dropdown untuk memilih tipe hewan
             JLabel typeLabel = new JLabel("Tipe Hewan");
-            String[] animalTypes = {"Cat", "Dog"};
+            String[] animalTypes = {"Cat", "Dog", "Hamster", "Parrot", "Rabbit", "Tertle"};
             JComboBox<String> typeComboBox = new JComboBox<>(animalTypes);
 
             // Menambahkan elemen-elemen ke dalam panel
@@ -105,6 +105,10 @@ public class AddCardUI extends JPanel {
                     int type = 0;
                     if ("Cat".equals((String) typeComboBox.getSelectedItem())) type = 1;
                     if ("Dog".equals((String) typeComboBox.getSelectedItem())) type = 2;
+                    if ("Hamster".equals((String) typeComboBox.getSelectedItem())) type = 3;
+                    if ("Parrot".equals((String) typeComboBox.getSelectedItem())) type = 4;
+                    if ("Rabbit".equals((String) typeComboBox.getSelectedItem())) type = 5;
+                    if ("Turtle".equals((String) typeComboBox.getSelectedItem())) type = 6;
                     if (nameField.getText().trim().isEmpty() || type == 0) {
                         JOptionPane.showMessageDialog(null, "Name and Pet Type cannot be empty!");
                     } else {
