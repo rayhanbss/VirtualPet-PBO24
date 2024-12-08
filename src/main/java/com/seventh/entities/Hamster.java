@@ -3,7 +3,7 @@ package com.seventh.entities;
 public class Hamster extends Pet {
     
     public Hamster(String name) {
-        super(name, 50);
+        super(name, getSmallMaxHealth());
     }
 
      // Special hungry level for hamster
