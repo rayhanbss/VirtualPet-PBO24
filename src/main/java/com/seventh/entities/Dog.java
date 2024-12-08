@@ -1,9 +1,10 @@
 package com.seventh.entities;
 
-public class Dog extends Pet{
-    public Dog(String name){
-        super(name, getDogMaxHealth());
+public class Dog extends Pet {
+    public Dog(String name) {
+        super(name, getLargeMaxHealth());
     }
+
     // Special happiness condition for Dog
     // Easily sad at happiness < 70
     @Override
@@ -17,4 +18,3 @@ public class Dog extends Pet{
         updateEffect("dirty", cleanness < 70);
     }
 }
-

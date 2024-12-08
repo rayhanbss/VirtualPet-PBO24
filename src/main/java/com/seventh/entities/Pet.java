@@ -12,18 +12,11 @@ public class Pet implements Action {
     private String age;
 
     protected final double MAX_HEALTH;
-<<<<<<< HEAD
-    private static final double DOG_MAX_HEALTH = 100;
-    private static final double CAT_MAX_HEALTH = 70;
-    private static final double HAMSTER_MAX_HEALTH = 50;
-    private static final double RABBIT_MAX_HEALTH = 70;
-=======
+
     private static final double LARGE_MAX_HEALTH = 100;
     private static final double MEDIUM_MAX_HEALTH = 70;
     private static final double SMALL_MAX_HEALTH = 50;
 
-
->>>>>>> 6d7241172f6fd980141d114573d0b0ff3d5a9827
 
     private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
@@ -167,15 +160,9 @@ public class Pet implements Action {
     public boolean isDirty() { return isDirty; }
 
     public double getMaxHealth () { return MAX_HEALTH; };
-<<<<<<< HEAD
-    public static double getDogMaxHealth() { return DOG_MAX_HEALTH; }
-    public static double getCatMaxHealth() { return CAT_MAX_HEALTH; }
-    public static double getHamsterMaxHealth() { return HAMSTER_MAX_HEALTH; }
-    public static double getRabbitMaxHealth() { return RABBIT_MAX_HEALTH; }
-=======
+
     public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
     public static double getMediumMaxHealth() { return MEDIUM_MAX_HEALTH; }
     public static double getSmallMaxHealth() { return SMALL_MAX_HEALTH; }
 
->>>>>>> 6d7241172f6fd980141d114573d0b0ff3d5a9827
 }
