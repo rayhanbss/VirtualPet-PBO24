@@ -5,7 +5,7 @@ import java.util.Random;
 public class Rabbit extends Pet {
 
     public Rabbit(String name) {
-        super(name, getRabbitMaxHealth());
+        super(name, getSmallMaxHealth());
     }
 
     // Special hungry level for rabbit
