@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,11 +19,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import com.seventh.entities.Pet;
+import com.seventh.util.AudioLoader;
 import com.seventh.util.FontLoader;
 
 public class PetCardUI extends JPanel{
     Pet pet;
-    FontLoader fontLoader;
     Font buttonIcon;
     
     JPanel main;
@@ -34,7 +35,8 @@ public class PetCardUI extends JPanel{
 
     JPanel barPanel;
     RoundedProgressBar healthBar, hungerBar, thirstBar;
-    
+
+    Clip buttonSound;
 
     Color buttonColor = new Color(0,122,255);
     Color white = new Color(246,246,246);
@@ -47,17 +49,17 @@ public class PetCardUI extends JPanel{
         this.pet = pet;
 
         // Load Font
-        fontLoader = new FontLoader();
-        buttonIcon = fontLoader.load(
+        buttonIcon = FontLoader.load(
             buttonIcon, 
-            "src/main/resources/MaterialSymbolsRounded.ttf",
+            "src/main/resources/font/MaterialSymbolsRounded.ttf",
             36f
         );
 
         // Cards panel
         this.setLayout(new BorderLayout());
         
-        
+        buttonSound = AudioLoader.load("button.wav");
+        buttonSound.setFramePosition(0);
         
         // >> main Part ---------------------------------------------------
         main = new JPanel();
@@ -166,7 +168,7 @@ public class PetCardUI extends JPanel{
         this.add(barPanel, BorderLayout.CENTER);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        Timer statusTimer = new Timer(100, _ -> {
+        Timer statusTimer = new Timer(60000, _ -> {
             pet.updateStatus();
         });
         statusTimer.start();
@@ -181,6 +183,7 @@ public class PetCardUI extends JPanel{
 
     public final void buttonListener(JButton button, int type){
         button.addActionListener((ActionEvent _) -> {
+            AudioLoader.play(buttonSound);
             pet.action(type);
         });
     }

@@ -1,45 +1,48 @@
 package com.seventh.entities;
 
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 import com.seventh.domain.Action;
 
-public class Pet implements Action {
-//ss
+public class Pet implements Action, Serializable {
+    private static final long serialVersionUID = 1L; 
+
     private final String name;
     private final LocalDate birthDate;
     private String age;
-
+    
     protected final double MAX_HEALTH;
-
+    
     private static final double LARGE_MAX_HEALTH = 100;
     private static final double MEDIUM_MAX_HEALTH = 70;
     private static final double SMALL_MAX_HEALTH = 50;
-
-
+    
+    
     private static final double MAX_STATS = 100;
     protected double health, energy, hunger, thirst, happiness, cleanness;
     protected boolean isDead, isSick, isTired, isHungry, isThristy, isSad, isDirty;
-
+    
     public Pet(String name, double upperBound) {
         this.name = name;
         this.birthDate = LocalDate.now();
         this.age = "Just Born";
         this.MAX_HEALTH = upperBound > 0 ? upperBound : 100;
-
+        
         // Initialize stats
         this.health = MAX_HEALTH;
         this.energy = this.hunger = this.thirst = this.happiness = this.cleanness = MAX_STATS;
-
+        
         // Initialize negative effects
         resetNegativeEffects();
     }
-
+    
     private void resetNegativeEffects() {
         isDead = isSick = isTired = isHungry = isThristy = isSad = isDirty = false;
     }
-
+    
     // Update age
     public void updateAge() {
         double week = ChronoUnit.DAYS.between(birthDate, LocalDate.now());
@@ -51,7 +54,7 @@ public class Pet implements Action {
             age = String.format("%.0f Weeks", week);
         } 
     }
-
+    
     // General setter for stats
     private void updateStat(String stat, double amount, double max) {
         switch (stat) {
@@ -63,7 +66,7 @@ public class Pet implements Action {
             case "cleanness" -> cleanness = Math.max(Math.min(cleanness + amount, max), 0 );
         }
     }
-
+    
     // Negative effect setters
     protected  void updateEffect(String effect, boolean condition) {
         switch (effect) {
@@ -76,7 +79,7 @@ public class Pet implements Action {
             case "dirty" -> isDirty = condition;
         }
     }
-
+    
     public void updateNegativeEffects() {
         
         updateEffect("dead", health <= 0);
@@ -87,7 +90,7 @@ public class Pet implements Action {
         updateEffect("sad", happiness < 60);
         updateEffect("dirty", cleanness < 70);
     }
-
+    
     // Status update method
     @Override
     public void updateStatus() {
@@ -101,8 +104,8 @@ public class Pet implements Action {
         updateStat("happiness", -0.25, MAX_STATS);
         updateStat("cleanness", -0.1, MAX_STATS);
     }
-
-
+    
+    
     
     // Implement actions
     @Override
@@ -114,7 +117,7 @@ public class Pet implements Action {
     public void giveDrink() { 
         updateStat("thirst", 5, MAX_STATS); 
         updateStat("energy", -2, MAX_STATS); 
-        }
+    }
     @Override
     public void playWith() { 
         updateStat("happiness", 15, MAX_STATS); 
@@ -127,7 +130,7 @@ public class Pet implements Action {
     public void clean() { updateStat("cleanness", 100, MAX_STATS); }
     @Override
     public void goToVet() { if(health > 0) updateStat("health", 50, MAX_HEALTH); }
-
+    
     @Override
     public void action(int type) {
         switch (type) {
@@ -140,7 +143,7 @@ public class Pet implements Action {
             default -> throw new AssertionError();
         }
     }
-
+    
     // Getters
     public String getName() { return name; }
     public String getAge() { return age; }
@@ -158,7 +161,8 @@ public class Pet implements Action {
     public boolean isThirsty() { return isThristy; }
     public boolean isSad() { return isSad; }
     public boolean isDirty() { return isDirty; }
-
+    public static long getSerialVersionUID() { return serialVersionUID; }
+    
     public double getMaxHealth () { return MAX_HEALTH; };
 
     public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
