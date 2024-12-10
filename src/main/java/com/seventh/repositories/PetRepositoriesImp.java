@@ -1,5 +1,6 @@
 package com.seventh.repositories;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +12,10 @@ import com.seventh.entities.Parrot;
 import com.seventh.entities.Pet;
 import com.seventh.entities.Rabbit;
 import com.seventh.entities.Turtle;
-public class PetRepositoriesImp implements PetRepositories{
-    private final List<Pet> petList = new ArrayList<>();
+public class PetRepositoriesImp implements PetRepositories, Serializable{
+    private static final long serialVersionUID = 1L;
 
+    private final List<Pet> petList = new ArrayList<>();
 
     @Override
     public void createPet(String name, int type) {
@@ -63,4 +65,5 @@ public class PetRepositoriesImp implements PetRepositories{
     public double getPetHappiness(Pet pet) {
         return pet.getHappiness();
     }
+    
 }

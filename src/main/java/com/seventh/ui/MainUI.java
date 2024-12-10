@@ -8,6 +8,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.seventh.entities.Pet;
 import com.seventh.repositories.PetRepositoriesImp;
 import com.seventh.util.FontLoader;
+import com.seventh.util.GameSaver;
 
 public class MainUI {
     private PetRepositoriesImp petRepositoriesImp;
@@ -55,7 +57,14 @@ public class MainUI {
     private final int height = 720;
 
     public MainUI(){
-        petRepositoriesImp = new PetRepositoriesImp();
+        try {
+            petRepositoriesImp = GameSaver.loadPetRepository("save.dat");
+            System.out.println("Pet Loaded");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Failed load, create new instead");
+            petRepositoriesImp = new PetRepositoriesImp();
+        }
+
         cardLength = 1;
         currentIndex = 0;
 
@@ -166,7 +175,6 @@ public class MainUI {
                 
                 // Midle
                 // > Card ---------------------------------------------------------
-                
                 middle = new JPanel();
                 middle.setPreferredSize(new Dimension(440, 570));
                 middle.setLayout(cardLayout);
@@ -174,6 +182,12 @@ public class MainUI {
 
                 addCard = new AddCardUI(petRepositoriesImp, this, middle);
                 middle.add(addCard, "AddCard");
+                if(petRepositoriesImp.getPetList() != null){
+                    for(Pet pet : petRepositoriesImp.getPetList()){
+                        PetCardUI petCardUI = new PetCardUI(pet);
+                        middle.add(petCardUI);
+                    }
+                }
 
                 // Bottom
                 // >>> Bullet
@@ -237,8 +251,17 @@ public class MainUI {
                 updateBullets();
 
             });
-
             
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    // Menyimpan PetRepositoriesImp ke dalam file saat aplikasi ditutup
+                    GameSaver.savePetRepository(petRepositoriesImp, "save.dat");
+                    System.out.println("Pet data saved automatically.");
+                } catch (IOException e) {
+                   System.out.println("save failed");
+                }
+            }));
+
             Timer timer = new Timer(60000, _ -> {
                 if(currentPet != null){
                     petAge.setText(currentPet.getAge());
@@ -253,6 +276,10 @@ public class MainUI {
         }
         
     }
+
+    
+    
+
 
     private void updateBullets() {
         // Ensure the current index is within bounds
