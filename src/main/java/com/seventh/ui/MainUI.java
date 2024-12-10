@@ -9,9 +9,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.sampled.Clip;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -26,6 +29,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import com.formdev.flatlaf.themes.FlatMacLightLaf;
 import com.seventh.entities.Pet;
 import com.seventh.repositories.PetRepositoriesImp;
+import com.seventh.util.AudioLoader;
 import com.seventh.util.FontLoader;
 import com.seventh.util.GameSaver;
 
@@ -34,7 +38,7 @@ public class MainUI {
     private Pet currentPet;
     private int currentIndex;
     private int cardLength;
-
+    private LocalDateTime lastSavedTime;
     JFrame frame;
     
     CardLayout cardLayout;
@@ -48,35 +52,32 @@ public class MainUI {
     JPanel rightBound, leftBound;
     JButton rightButton, leftButton;
 
+    Clip buttonSound;
     
+     
     Color black = new Color(29,29,29);
-    FontLoader fontLoader;
     Font mainFont, subFont, buttonIcon;
 
     private final int width = 540;
     private final int height = 720;
 
     public MainUI(){
-        try {
-            petRepositoriesImp = GameSaver.loadPetRepository("save.dat");
-            System.out.println("Pet Loaded");
-        } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Failed load, create new instead");
-            petRepositoriesImp = new PetRepositoriesImp();
-        }
+        loadGame();
 
         cardLength = 1;
         currentIndex = 0;
 
-        fontLoader = new FontLoader();
         mainFont = new Font("Open Sans",Font.BOLD, 24);
         subFont = new Font("Open Sans",Font.PLAIN, 12);
-        buttonIcon = fontLoader.load(
+        buttonIcon = FontLoader.load(
             buttonIcon, 
-            "src/main/resources/MaterialSymbolsRounded.ttf",
+            "src/main/resources/font/MaterialSymbolsRounded.ttf",
             36f
         );
 
+        buttonSound = AudioLoader.load("button.wav");
+        buttonSound.setFramePosition(0);
+        
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
             // Create and display your GUI
@@ -212,6 +213,7 @@ public class MainUI {
             frame.setVisible(true);
 
             rightButton.addActionListener((ActionEvent _) -> {
+                AudioLoader.play(buttonSound);
                 cardLayout.next(middle);
                 cardLength = petRepositoriesImp.getPetList().size() + 1;
                 currentIndex = (currentIndex + 1) % cardLength;
@@ -232,6 +234,7 @@ public class MainUI {
             });
             
             leftButton.addActionListener((ActionEvent _) -> {
+                AudioLoader.play(buttonSound);
                 cardLayout.previous(middle);
                 cardLength = petRepositoriesImp.getPetList().size() + 1;
                 currentIndex = (currentIndex - 1 + cardLength) % cardLength;
@@ -255,6 +258,7 @@ public class MainUI {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     // Menyimpan PetRepositoriesImp ke dalam file saat aplikasi ditutup
+                    lastSavedTime = LocalDateTime.now();
                     GameSaver.savePetRepository(petRepositoriesImp, "save.dat");
                     System.out.println("Pet data saved automatically.");
                 } catch (IOException e) {
@@ -277,7 +281,25 @@ public class MainUI {
         
     }
 
-    
+    private void loadGame(){
+        try {
+            petRepositoriesImp = GameSaver.loadPetRepository("save.dat");
+            if (lastSavedTime != null){
+                Duration duration = Duration.between(lastSavedTime, LocalDateTime.now());
+                double minutes = Math.floor(duration.toMinutes());
+                System.out.println(minutes); //for debug
+                for(Pet pet : petRepositoriesImp.getPetList()){
+                    for (double i = 0; i < minutes; i++){
+                        pet.updateStatus();
+                    }
+                }
+            }
+            System.out.println("Pet Loaded");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Failed load, create new instead");
+            petRepositoriesImp = new PetRepositoriesImp();
+        }
+    }
     
 
 

@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.sound.sampled.Clip;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -21,21 +22,27 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.seventh.repositories.PetRepositoriesImp;
+import com.seventh.util.AudioLoader;
 import com.seventh.util.FontLoader;
 
 public class AddCardUI extends JPanel {
-    FontLoader fontLoader;
     Font buttonIcon;
     JButton addButton;
+    Clip buttonSound, errorSound;
+
 
     public AddCardUI(PetRepositoriesImp petRepositoriesImp, MainUI mainUI, JPanel cardPanel) {
-        fontLoader = new FontLoader();
-
-        buttonIcon = fontLoader.load(
+        buttonIcon = FontLoader.load(
                 buttonIcon,
-                "src/main/resources/MaterialSymbolsRounded.ttf",
+                "src/main/resources/font/MaterialSymbolsRounded.ttf",
                 48f
         );
+
+        buttonSound = AudioLoader.load("button.wav");
+        buttonSound.setFramePosition(0);
+
+        errorSound = AudioLoader.load("error.wav");
+        errorSound.setFramePosition(0);
 
         // Mengatur layout menjadi BoxLayout (vertical)
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -61,6 +68,7 @@ public class AddCardUI extends JPanel {
         this.add(Box.createVerticalGlue());
 
         addButton.addActionListener((ActionEvent _) -> {
+            AudioLoader.play(buttonSound);
             // Membuat panel untuk input nama dan tipe hewan
             JPanel panel = new JPanel();
             panel.setPreferredSize(new Dimension(240, 60));
@@ -91,17 +99,27 @@ public class AddCardUI extends JPanel {
             JPanel buttonPanel = (JPanel) optionPane.getComponent(1); // Get the button panel
             buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center the buttons
 
+            
             dialog.setVisible(true);
-
+            
+            if (optionPane.getValue() == null) {
+                System.out.println("Dialog closed without selection (X button).");
+                return; // Keluar dari metode untuk menghindari NPE
+            }
             int option = (int) optionPane.getValue();
 
             // Handle the case where the dialog is closed by clicking the "X" button (CLOSED_OPTION)
             switch (option) {
                 case JOptionPane.CLOSED_OPTION -> {
+                    AudioLoader.play(errorSound);
                     System.out.println("Dialog closed by user (X button)");
                     return;  // Exit the method gracefully
                 }
                 case JOptionPane.OK_OPTION -> {
+                    if (buttonSound != null) {
+                        buttonSound.setFramePosition(0); // Reset posisi ke awal
+                        buttonSound.start();
+                    }
                     int type = 0;
                     if ("Cat".equals((String) typeComboBox.getSelectedItem())) type = 1;
                     if ("Dog".equals((String) typeComboBox.getSelectedItem())) type = 2;
@@ -110,6 +128,7 @@ public class AddCardUI extends JPanel {
                     if ("Rabbit".equals((String) typeComboBox.getSelectedItem())) type = 5;
                     if ("Turtle".equals((String) typeComboBox.getSelectedItem())) type = 6;
                     if (nameField.getText().trim().isEmpty() || type == 0) {
+                        if (errorSound != null) errorSound.start();
                         JOptionPane.showMessageDialog(null, "Name and Pet Type cannot be empty!");
                     } else {
                         petRepositoriesImp.createPet(nameField.getText(), type);
