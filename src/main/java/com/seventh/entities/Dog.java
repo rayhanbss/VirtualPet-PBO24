@@ -2,7 +2,7 @@ package com.seventh.entities;
 
 public class Dog extends Pet {
     public Dog(String name) {
-        super(name, getLargeMaxHealth());
+        super(name, getLargeMaxHealth(), 2);
     }
 
     // Special happiness condition for Dog

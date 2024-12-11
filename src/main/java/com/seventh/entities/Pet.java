@@ -12,8 +12,9 @@ public class Pet implements Action, Serializable {
 
     private final String name;
     private final LocalDate birthDate;
+    private final int petType;
     private String age;
-    
+
     protected final double MAX_HEALTH;
     
     private static final double LARGE_MAX_HEALTH = 100;
@@ -25,9 +26,10 @@ public class Pet implements Action, Serializable {
     protected double health, energy, hunger, thirst, happiness, cleanness;
     protected boolean isDead, isSick, isTired, isHungry, isThristy, isSad, isDirty;
     
-    public Pet(String name, double upperBound) {
+    public Pet(String name, double upperBound, int type) {
         this.name = name;
         this.birthDate = LocalDate.now();
+        this.petType = type;
         this.age = "Just Born";
         this.MAX_HEALTH = upperBound > 0 ? upperBound : 100;
         
@@ -143,10 +145,12 @@ public class Pet implements Action, Serializable {
         }
     }
     
+    
     // Getters
     public String getName() { return name; }
     public String getAge() { return age; }
     public LocalDate getBirthDate() { return birthDate; }
+    public int getPetType() { return petType; }
     public double getHealth() { return health; }
     public double getEnergy() { return energy; }
     public double getHunger() { return hunger; }
@@ -163,9 +167,10 @@ public class Pet implements Action, Serializable {
     public static long getSerialVersionUID() { return serialVersionUID; }
     
     public double getMaxHealth () { return MAX_HEALTH; };
-
+    
     public static double getLargeMaxHealth() { return LARGE_MAX_HEALTH; }
     public static double getMediumMaxHealth() { return MEDIUM_MAX_HEALTH; }
     public static double getSmallMaxHealth() { return SMALL_MAX_HEALTH; }
+
 
 }

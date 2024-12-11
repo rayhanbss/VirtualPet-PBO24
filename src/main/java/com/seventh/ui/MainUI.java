@@ -299,7 +299,7 @@ public class MainUI {
                 System.out.println(minutes); //for debug
                 for(Pet pet : petRepositoriesImp.getPetList()){
                     for (double i = 0; i < minutes; i++){
-                        pet.updateStatus();
+                        if(!pet.isDead()) pet.updateStatus();
                     }
                 }
             }

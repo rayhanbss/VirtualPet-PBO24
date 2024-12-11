@@ -69,75 +69,77 @@ public class AddCardUI extends JPanel {
 
         addButton.addActionListener((ActionEvent _) -> {
             AudioLoader.play(buttonSound);
-            // Membuat panel untuk input nama dan tipe hewan
-            JPanel panel = new JPanel();
-            panel.setPreferredSize(new Dimension(240, 60));
-            panel.setLayout(new GridLayout(2, 2)); // Mengatur layout menjadi 2 baris dan 2 kolom
+            boolean validInput = false;
+            while (!validInput) {
+                // Membuat panel untuk input nama dan tipe hewan
+                JPanel panel = new JPanel();
+                panel.setPreferredSize(new Dimension(240, 60));
+                panel.setLayout(new GridLayout(2, 2)); // Mengatur layout menjadi 2 baris dan 2 kolom
 
-            // Label dan input untuk nama pet
-            JLabel nameLabel = new JLabel("Pet Name");
-            JTextField nameField = new JTextField(20);
+                // Label dan input untuk nama pet
+                JLabel nameLabel = new JLabel("Pet Name");
+                JTextField nameField = new JTextField(20);
 
-            // Label dan dropdown untuk memilih tipe hewan
-            JLabel typeLabel = new JLabel("Tipe Hewan");
-            String[] animalTypes = {"Cat", "Dog", "Hamster", "Parrot", "Rabbit", "Tertle"};
-            JComboBox<String> typeComboBox = new JComboBox<>(animalTypes);
+                // Label dan dropdown untuk memilih tipe hewan
+                JLabel typeLabel = new JLabel("Tipe Hewan");
+                String[] animalTypes = {"Cat", "Dog", "Hamster", "Parrot", "Rabbit", "Turtle"};
+                JComboBox<String> typeComboBox = new JComboBox<>(animalTypes);
 
-            // Menambahkan elemen-elemen ke dalam panel
-            panel.add(nameLabel);
-            panel.add(nameField);
-            panel.add(typeLabel);
-            panel.add(typeComboBox);
+                // Menambahkan elemen-elemen ke dalam panel
+                panel.add(nameLabel);
+                panel.add(nameField);
+                panel.add(typeLabel);
+                panel.add(typeComboBox);
 
-            // Menampilkan input dialog dalam bentuk panel
-            JOptionPane optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            JDialog dialog = optionPane.createDialog("Masukkan Informasi Pet");
+                // Menampilkan input dialog dalam bentuk panel
+                JOptionPane optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+                JDialog dialog = optionPane.createDialog("Masukkan Informasi Pet");
 
-            // Centering the OK button
-            
-            dialog.setLayout(new BorderLayout());
-            JPanel buttonPanel = (JPanel) optionPane.getComponent(1); // Get the button panel
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center the buttons
+                // Centering the OK button
+                dialog.setLayout(new BorderLayout());
+                JPanel buttonPanel = (JPanel) optionPane.getComponent(1); // Get the button panel
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center the buttons
 
-            
-            dialog.setVisible(true);
-            
-            if (optionPane.getValue() == null) {
-                System.out.println("Dialog closed without selection (X button).");
-                return; // Keluar dari metode untuk menghindari NPE
-            }
-            int option = (int) optionPane.getValue();
+                dialog.setVisible(true);
 
-            // Handle the case where the dialog is closed by clicking the "X" button (CLOSED_OPTION)
-            switch (option) {
-                case JOptionPane.CLOSED_OPTION -> {
-                    AudioLoader.play(errorSound);
-                    System.out.println("Dialog closed by user (X button)");
-                    return;  // Exit the method gracefully
+                if (optionPane.getValue() == null) {
+                    System.out.println("Dialog closed without selection (X button).");
+                    return; // Keluar dari metode untuk menghindari NPE
                 }
-                case JOptionPane.OK_OPTION -> {
-                    if (buttonSound != null) {
-                        buttonSound.setFramePosition(0); // Reset posisi ke awal
-                        buttonSound.start();
+                int option = (int) optionPane.getValue();
+
+                // Handle the case where the dialog is closed by clicking the "X" button (CLOSED_OPTION)
+                switch (option) {
+                    case JOptionPane.CLOSED_OPTION -> {
+                        AudioLoader.play(errorSound);
+                        System.out.println("Dialog closed by user (X button)");
+                        return;  // Exit the method gracefully
                     }
-                    int type = 0;
-                    if ("Cat".equals((String) typeComboBox.getSelectedItem())) type = 1;
-                    if ("Dog".equals((String) typeComboBox.getSelectedItem())) type = 2;
-                    if ("Hamster".equals((String) typeComboBox.getSelectedItem())) type = 3;
-                    if ("Parrot".equals((String) typeComboBox.getSelectedItem())) type = 4;
-                    if ("Rabbit".equals((String) typeComboBox.getSelectedItem())) type = 5;
-                    if ("Turtle".equals((String) typeComboBox.getSelectedItem())) type = 6;
-                    if (nameField.getText().trim().isEmpty() || type == 0) {
-                        if (errorSound != null) errorSound.start();
-                        JOptionPane.showMessageDialog(null, "Name and Pet Type cannot be empty!");
-                    } else {
-                        petRepositoriesImp.createPet(nameField.getText(), type);
-                        PetCardUI petCard = new PetCardUI(petRepositoriesImp.getPetList().getLast());
-                        cardPanel.add(petCard, "PetCard" + (petRepositoriesImp.getPetList().size() - 1));
-                        mainUI.updateCardNavigation();
+                    case JOptionPane.OK_OPTION -> {
+                        if (buttonSound != null) {
+                            buttonSound.setFramePosition(0); // Reset posisi ke awal
+                            buttonSound.start();
+                        }
+                        int type = 0;
+                        if ("Cat".equals((String) typeComboBox.getSelectedItem())) type = 1;
+                        if ("Dog".equals((String) typeComboBox.getSelectedItem())) type = 2;
+                        if ("Hamster".equals((String) typeComboBox.getSelectedItem())) type = 3;
+                        if ("Parrot".equals((String) typeComboBox.getSelectedItem())) type = 4;
+                        if ("Rabbit".equals((String) typeComboBox.getSelectedItem())) type = 5;
+                        if ("Turtle".equals((String) typeComboBox.getSelectedItem())) type = 6;
+                        if (nameField.getText().trim().isEmpty() || type == 0) {
+                            if (errorSound != null) errorSound.start();
+                            JOptionPane.showMessageDialog(null, "Name and Pet Type cannot be empty!");
+                        } else {
+                            petRepositoriesImp.createPet(nameField.getText(), type);
+                            PetCardUI petCard = new PetCardUI(petRepositoriesImp.getPetList().getLast());
+                            cardPanel.add(petCard, "PetCard" + (petRepositoriesImp.getPetList().size() - 1));
+                            mainUI.updateCardNavigation();
+                            validInput = true;
+                        }
                     }
+                    default -> System.out.println("close");
                 }
-                default -> System.out.println("close");
             }
         });
 

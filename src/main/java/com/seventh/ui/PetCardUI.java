@@ -13,7 +13,9 @@ import javax.sound.sampled.Clip;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -21,12 +23,17 @@ import javax.swing.Timer;
 import com.seventh.entities.Pet;
 import com.seventh.util.AudioLoader;
 import com.seventh.util.FontLoader;
+import com.seventh.util.ImageLoader;
 
 public class PetCardUI extends JPanel{
     Pet pet;
     Font buttonIcon;
     
     JPanel main;
+    ImageIcon petImage;
+    JLabel petImageLabel;
+    JPanel imagePanel;
+
     JPanel petPanel, effectsPanel;
     negativeEffectUI[] negativeEffectUIs;
 
@@ -66,9 +73,20 @@ public class PetCardUI extends JPanel{
         main.setPreferredSize(new Dimension(440, 400));
         main.setBackground(null);
 
+        setPetImage(pet.getPetType());
+        petImageLabel = new JLabel(petImage);
+        petImageLabel.setPreferredSize(new Dimension(petImage.getIconWidth(), petImage.getIconHeight()));
+
+        imagePanel = new JPanel();
+        imagePanel.setPreferredSize(new Dimension(petImage.getIconWidth(), petImage.getIconHeight()));
+        imagePanel.setBackground(null);
+        
+        imagePanel.add(petImageLabel);
+
         petPanel = new JPanel();
         petPanel.setPreferredSize(new Dimension(440, 350));
         petPanel.setBackground(null);
+        petPanel.add(imagePanel);
         
         effectsPanel = new JPanel();
         effectsPanel.setPreferredSize(new Dimension(440, 100));
@@ -222,6 +240,18 @@ public class PetCardUI extends JPanel{
             effectsPanel.revalidate();
             effectsPanel.repaint();
         });
+    }
+
+    private void setPetImage(int type){
+        switch (type) {
+            case 1 -> petImage = ImageLoader.load(petImage, "cat.png");
+            case 2 -> petImage = ImageLoader.load(petImage, "dog.png");
+            case 3 -> petImage = ImageLoader.load(petImage, "hamster.png");
+            case 4 -> petImage = ImageLoader.load(petImage, "parrot.jpg");
+            case 5 -> petImage = ImageLoader.load(petImage, "rabbit.jpg");
+            case 6 -> petImage = ImageLoader.load(petImage, "turtle.jpg");
+            default -> {System.out.println(type); throw new AssertionError();}
+        }
     }
 
     private void updateBars(){
