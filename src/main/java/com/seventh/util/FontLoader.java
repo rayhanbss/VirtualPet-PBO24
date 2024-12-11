@@ -4,16 +4,24 @@ import java.awt.Font;
 import java.awt.FontFormatException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
-public class FontLoader{
-    public static Font load (Font font, String path, float size) {
+public class FontLoader {
+    public static Font load(String path, float size) {
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File(path));
-            font = font.deriveFont(size);
+            URL fontUrl = FontLoader.class.getResource("/font/" + path);
+            
+            if (fontUrl == null) {
+                System.out.println("Font file not found: " + path);
+                return null;
+            }
+            
+            Font font = Font.createFont(Font.TRUETYPE_FONT, new File(fontUrl.toURI()));
+            return font.deriveFont(size);
 
-        } catch (IOException | FontFormatException e) {
-            System.out.println("Failed load font");
+        } catch (IOException | FontFormatException | java.net.URISyntaxException e) {
+            System.out.println("Failed to load font: " + path);
         }
-        return font;
+        return null;
     }
 }

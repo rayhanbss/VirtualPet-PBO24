@@ -18,6 +18,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ import com.seventh.repositories.PetRepositoriesImp;
 import com.seventh.util.AudioLoader;
 import com.seventh.util.FontLoader;
 import com.seventh.util.GameSaver;
+import com.seventh.util.ImageLoader;
 
 public class MainUI {
     private PetRepositoriesImp petRepositoriesImp;
@@ -41,6 +43,7 @@ public class MainUI {
     private int cardLength;
     
     JFrame frame;
+    ImageIcon appIcon;
     
     CardLayout cardLayout;
     AddCardUI addCard;
@@ -71,8 +74,7 @@ public class MainUI {
         mainFont = new Font("Open Sans",Font.BOLD, 24);
         subFont = new Font("Open Sans",Font.PLAIN, 12);
         buttonIcon = FontLoader.load(
-            buttonIcon, 
-            "src/main/resources/font/MaterialSymbolsRounded.ttf",
+            "MaterialSymbolsRounded.ttf",
             36f
         );
 
@@ -95,6 +97,9 @@ public class MainUI {
                 frame.setSize(width, height);
                 frame.setLocationRelativeTo(null);
                 frame.setResizable(false);
+
+                appIcon = ImageLoader.load("icon.png");
+                frame.setIconImage(appIcon.getImage());
 
                 AudioLoader.play(backgroundMusic);
                 cardLayout = new CardLayout();

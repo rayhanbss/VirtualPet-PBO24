@@ -33,8 +33,7 @@ public class AddCardUI extends JPanel {
 
     public AddCardUI(PetRepositoriesImp petRepositoriesImp, MainUI mainUI, JPanel cardPanel) {
         buttonIcon = FontLoader.load(
-                buttonIcon,
-                "src/main/resources/font/MaterialSymbolsRounded.ttf",
+                "MaterialSymbolsRounded.ttf",
                 48f
         );
 

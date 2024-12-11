@@ -5,11 +5,11 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 public class ImageLoader {
-    public static ImageIcon load(ImageIcon image, String path){
+    public static ImageIcon load(String path){
         try{
             URL imageUrl = ImageLoader.class.getResource("/image/" + path);
             if (imageUrl != null) {
-                image = new ImageIcon(imageUrl);
+                ImageIcon image = new ImageIcon(imageUrl);
                 System.out.println("Loaded image details:");
                 System.out.println("Width: " + image.getIconWidth());
                 System.out.println("Height: " + image.getIconHeight());
