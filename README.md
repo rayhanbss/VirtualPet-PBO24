@@ -10,6 +10,6 @@ Virtual Pet Game, created for the final project of the Object-Oriented Programmi
 4. ~~Make the repositories~~
 5. ~~Make the basic GUI~~
 6. ~~Make GUI sync with the repo (Button, Text, etc.)~~
-7. Polishing GUI
-8. Testing
-9. Fixing (Optional)
+7. ~~Polishing GUI~~
+8. ~~Testing~~
+9. ~~Fixing (Optional)~~
