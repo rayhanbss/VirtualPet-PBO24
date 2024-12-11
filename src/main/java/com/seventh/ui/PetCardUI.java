@@ -246,9 +246,9 @@ public class PetCardUI extends JPanel{
             case 1 -> petImage = ImageLoader.load("cat.png");
             case 2 -> petImage = ImageLoader.load("dog.png");
             case 3 -> petImage = ImageLoader.load("hamster.png");
-            case 4 -> petImage = ImageLoader.load("parrot.jpg");
-            case 5 -> petImage = ImageLoader.load("rabbit.jpg");
-            case 6 -> petImage = ImageLoader.load("turtle.jpg");
+            case 4 -> petImage = ImageLoader.load("parrot.png");
+            case 5 -> petImage = ImageLoader.load("rabbit.png");
+            case 6 -> petImage = ImageLoader.load("turtle.png");
             default -> {System.out.println(type); throw new AssertionError();}
         }
     }
