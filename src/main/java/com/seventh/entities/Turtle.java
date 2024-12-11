@@ -2,7 +2,7 @@ package com.seventh.entities;
 public class Turtle extends Pet{
     
     public Turtle(String name){
-        super(name, getTurtleMaxHealth());
+        super(name, getMediumMaxHealth());
     }
 
     // Special hungry level for Turtle

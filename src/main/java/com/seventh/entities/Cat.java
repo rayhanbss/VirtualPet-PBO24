@@ -4,7 +4,7 @@ import java.util.Random;
 public class Cat extends Pet{
     
     public Cat(String name){
-        super(name, getCatMaxHealth());
+        super(name, getMediumMaxHealth());
     }
 
     // Special hungry level for cat
@@ -17,7 +17,7 @@ public class Cat extends Pet{
         updateEffect("hungry", getHunger() < 70 || (getHunger() >= (70) && getHunger() <= 80 && new Random().nextInt(10) != 1));
         updateEffect("thirsty", thirst < 70);
         updateEffect("sad", happiness < 60);
-        updateEffect("dirty", cleanness < 7);
+        updateEffect("dirty", cleanness < 70);
     }
 
 }
