@@ -12,7 +12,7 @@ public class Cat extends Pet{
     @Override
     public void updateNegativeEffects() {
         updateEffect("dead", health == 0);
-        updateEffect("sick", health < 50);
+        updateEffect("sick", health < health/2);
         updateEffect("tired", energy < 60);
         updateEffect("hungry", getHunger() < 70 || (getHunger() >= (70) && getHunger() <= 80 && new Random().nextInt(10) != 1));
         updateEffect("thirsty", thirst < 70);

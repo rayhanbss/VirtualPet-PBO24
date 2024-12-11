@@ -13,7 +13,7 @@ public class Rabbit extends Pet {
     @Override
     public void updateNegativeEffects() {
         updateEffect("dead", health == 0);
-        updateEffect("sick", health < 50);
+        updateEffect("sick", health < health/2);
         updateEffect("tired", energy < 60);
         updateEffect("hungry", hunger < 60);
         updateEffect("thirsty", thirst < 70);
