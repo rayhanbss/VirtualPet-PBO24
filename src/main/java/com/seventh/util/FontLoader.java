@@ -6,16 +6,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class FontLoader{
-    public static Font load (Font materialFont, String path, float size) {
+    public static Font load (Font font, String path, float size) {
         try {
-            materialFont = Font.createFont(Font.TRUETYPE_FONT, new File(path));
-            materialFont = materialFont.deriveFont(size);
+            font = Font.createFont(Font.TRUETYPE_FONT, new File(path));
+            font = font.deriveFont(size);
 
         } catch (IOException | FontFormatException e) {
             System.out.println("Failed load font");
         }
-
-        System.out.println("font loaded");
-        return materialFont;
+        return font;
     }
 }

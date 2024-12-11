@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -38,7 +39,7 @@ public class MainUI {
     private Pet currentPet;
     private int currentIndex;
     private int cardLength;
-    private LocalDateTime lastSavedTime;
+    
     JFrame frame;
     
     CardLayout cardLayout;
@@ -52,7 +53,7 @@ public class MainUI {
     JPanel rightBound, leftBound;
     JButton rightButton, leftButton;
 
-    Clip buttonSound;
+    Clip backgroundMusic, buttonSound;
     
      
     Color black = new Color(29,29,29);
@@ -77,6 +78,12 @@ public class MainUI {
 
         buttonSound = AudioLoader.load("button.wav");
         buttonSound.setFramePosition(0);
+
+        backgroundMusic = AudioLoader.load("bgm.wav");
+        FloatControl volume = (FloatControl) backgroundMusic.getControl(FloatControl.Type.MASTER_GAIN);
+        volume.setValue(-10.0f);
+        backgroundMusic.setFramePosition(0);
+        backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
         
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
@@ -89,6 +96,7 @@ public class MainUI {
                 frame.setLocationRelativeTo(null);
                 frame.setResizable(false);
 
+                AudioLoader.play(backgroundMusic);
                 cardLayout = new CardLayout();
 
                 // > Right bound with button ---------------------------------------
@@ -258,7 +266,7 @@ public class MainUI {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
                     // Menyimpan PetRepositoriesImp ke dalam file saat aplikasi ditutup
-                    lastSavedTime = LocalDateTime.now();
+                    petRepositoriesImp.setLastSavedTime();
                     GameSaver.savePetRepository(petRepositoriesImp, "save.dat");
                     System.out.println("Pet data saved automatically.");
                 } catch (IOException e) {
@@ -284,8 +292,9 @@ public class MainUI {
     private void loadGame(){
         try {
             petRepositoriesImp = GameSaver.loadPetRepository("save.dat");
-            if (lastSavedTime != null){
-                Duration duration = Duration.between(lastSavedTime, LocalDateTime.now());
+            if (petRepositoriesImp.getLastSavedTime() == null) petRepositoriesImp.setLastSavedTime();
+            if (petRepositoriesImp.getLastSavedTime() != null){
+                Duration duration = Duration.between(petRepositoriesImp.getLastSavedTime(), LocalDateTime.now());
                 double minutes = Math.floor(duration.toMinutes());
                 System.out.println(minutes); //for debug
                 for(Pet pet : petRepositoriesImp.getPetList()){
@@ -301,8 +310,6 @@ public class MainUI {
         }
     }
     
-
-
     private void updateBullets() {
         // Ensure the current index is within bounds
         if (currentIndex < 0 || currentIndex >= bullets.size()) {
@@ -323,7 +330,7 @@ public class MainUI {
         }
     }
 
-    protected  void updateCardNavigation() {
+    protected void updateCardNavigation() {
         cardLength = petRepositoriesImp.getPetList().size() + 1;
         
         // Hapus bullets lama

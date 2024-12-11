@@ -1,6 +1,7 @@
 package com.seventh.repositories;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class PetRepositoriesImp implements PetRepositories, Serializable{
     private static final long serialVersionUID = 1L;
 
     private final List<Pet> petList = new ArrayList<>();
+    private LocalDateTime lastSavedTime;
 
     @Override
     public void createPet(String name, int type) {
@@ -65,5 +67,9 @@ public class PetRepositoriesImp implements PetRepositories, Serializable{
     public double getPetHappiness(Pet pet) {
         return pet.getHappiness();
     }
+
+    public void setLastSavedTime(){ lastSavedTime = LocalDateTime.now(); }
+
+    public LocalDateTime getLastSavedTime(){ return lastSavedTime; }
     
 }
