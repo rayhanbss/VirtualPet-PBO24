@@ -86,6 +86,7 @@ public class MainUI {
         volume.setValue(-10.0f);
         backgroundMusic.setFramePosition(0);
         backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+        backgroundMusic.start();
         
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
@@ -100,7 +101,6 @@ public class MainUI {
                 appIcon = ImageLoader.load("icon.png");
                 frame.setIconImage(appIcon.getImage());
 
-                AudioLoader.play(backgroundMusic);
                 cardLayout = new CardLayout();
 
                 rightButton = new JButton("\ue315");
