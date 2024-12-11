@@ -173,7 +173,8 @@ public class PetCardUI extends JPanel{
         });
         statusTimer.start();
         
-        Timer barTimer = new Timer(1000, _ -> {
+        Timer barTimer = new Timer(500, _ -> {
+            pet.updateNegativeEffects();
             updateEffectsPanel();
             updateBars();
             updateButton();

@@ -94,7 +94,6 @@ public class Pet implements Action, Serializable {
     // Status update method
     @Override
     public void updateStatus() {
-        updateNegativeEffects();
         updateAge();
         if(isDead) energy = hunger = thirst = happiness = cleanness = 0;
         if(isHungry || isThristy || isTired) updateStat("health", -0.1, MAX_HEALTH);
