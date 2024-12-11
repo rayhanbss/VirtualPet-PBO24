@@ -106,8 +106,6 @@ public class Pet implements Action, Serializable {
         updateStat("cleanness", -0.1, MAX_STATS);
     }
     
-    
-    
     // Implement actions
     @Override
     public void giveFood() {

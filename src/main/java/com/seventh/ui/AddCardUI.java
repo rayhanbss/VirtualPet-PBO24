@@ -43,7 +43,6 @@ public class AddCardUI extends JPanel {
         errorSound = AudioLoader.load("error.wav");
         errorSound.setFramePosition(0);
 
-        // Mengatur layout menjadi BoxLayout (vertical)
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setPreferredSize(new Dimension(440, 570));
         this.setBackground(null);
@@ -57,11 +56,9 @@ public class AddCardUI extends JPanel {
         addButton.setBorder(null);
         addButton.setFont(buttonIcon);
 
-        // Mengatur posisi tombol ke tengah
         addButton.setAlignmentX(CENTER_ALIGNMENT);
         addButton.setAlignmentY(CENTER_ALIGNMENT);
 
-        // Tambahkan glue di atas dan bawah untuk menempatkan tombol di tengah
         this.add(Box.createRigidArea(new Dimension(440, 206)));
         this.add(addButton);
         this.add(Box.createVerticalGlue());
@@ -70,53 +67,46 @@ public class AddCardUI extends JPanel {
             AudioLoader.play(buttonSound);
             boolean validInput = false;
             while (!validInput) {
-                // Membuat panel untuk input nama dan tipe hewan
                 JPanel panel = new JPanel();
                 panel.setPreferredSize(new Dimension(240, 60));
-                panel.setLayout(new GridLayout(2, 2)); // Mengatur layout menjadi 2 baris dan 2 kolom
+                panel.setLayout(new GridLayout(2, 2)); 
 
-                // Label dan input untuk nama pet
                 JLabel nameLabel = new JLabel("Pet Name");
                 JTextField nameField = new JTextField(20);
 
-                // Label dan dropdown untuk memilih tipe hewan
                 JLabel typeLabel = new JLabel("Tipe Hewan");
                 String[] animalTypes = {"Cat", "Dog", "Hamster", "Parrot", "Rabbit", "Turtle"};
                 JComboBox<String> typeComboBox = new JComboBox<>(animalTypes);
 
-                // Menambahkan elemen-elemen ke dalam panel
                 panel.add(nameLabel);
                 panel.add(nameField);
                 panel.add(typeLabel);
                 panel.add(typeComboBox);
 
-                // Menampilkan input dialog dalam bentuk panel
                 JOptionPane optionPane = new JOptionPane(panel, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
                 JDialog dialog = optionPane.createDialog("Masukkan Informasi Pet");
 
-                // Centering the OK button
                 dialog.setLayout(new BorderLayout());
-                JPanel buttonPanel = (JPanel) optionPane.getComponent(1); // Get the button panel
-                buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER)); // Center the buttons
+                JPanel buttonPanel = (JPanel) optionPane.getComponent(1);
+                buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
 
                 dialog.setVisible(true);
 
                 if (optionPane.getValue() == null) {
                     System.out.println("Dialog closed without selection (X button).");
-                    return; // Keluar dari metode untuk menghindari NPE
+                    return;
                 }
                 int option = (int) optionPane.getValue();
 
-                // Handle the case where the dialog is closed by clicking the "X" button (CLOSED_OPTION)
                 switch (option) {
                     case JOptionPane.CLOSED_OPTION -> {
                         AudioLoader.play(errorSound);
                         System.out.println("Dialog closed by user (X button)");
-                        return;  // Exit the method gracefully
+                        return;
                     }
                     case JOptionPane.OK_OPTION -> {
                         if (buttonSound != null) {
-                            buttonSound.setFramePosition(0); // Reset posisi ke awal
+                            buttonSound.setFramePosition(0);
                             buttonSound.start();
                         }
                         int type = 0;

@@ -89,7 +89,6 @@ public class MainUI {
         
         try {
             UIManager.setLookAndFeel(new FlatMacLightLaf());
-            // Create and display your GUI
             SwingUtilities.invokeLater(() -> {
                 frame = new JFrame("Virtual Pet");
                 frame.setLayout(new BorderLayout());
@@ -104,7 +103,6 @@ public class MainUI {
                 AudioLoader.play(backgroundMusic);
                 cardLayout = new CardLayout();
 
-                // > Right bound with button ---------------------------------------
                 rightButton = new JButton("\ue315");
                 rightButton.setContentAreaFilled(false);
                 rightButton.setFocusPainted(false);
@@ -122,8 +120,7 @@ public class MainUI {
                 rightBound.add(Box.createVerticalGlue()); 
                 rightBound.add(rightButton);
                 rightBound.add(Box.createVerticalGlue());
-                
-                // > Left bound with button ----------------------------------------
+
                 leftButton = new JButton("\ue314");
                 leftButton.setContentAreaFilled(false);
                 leftButton.setFocusPainted(false);
@@ -141,14 +138,10 @@ public class MainUI {
                 leftBound.add(leftButton);
                 leftBound.add(Box.createVerticalGlue());
                 
-                // Main Panel
                 main = new JPanel();
                 main.setPreferredSize(new Dimension(440, 720));
                 main.setLayout(new BorderLayout());
 
-                // >> Top part ------------------------------------------------------
-                
-                // >>> Pet Name
                 petName = new JTextField("Add Pet");
                 petName.setHorizontalAlignment(JTextField.CENTER);
                 petName.setDisabledTextColor(black);
@@ -163,7 +156,6 @@ public class MainUI {
                 h_petName.setBackground(null);
                 h_petName.add(petName, BorderLayout.SOUTH);
                 
-                // >>> Pet Age
                 petAge = new JTextField("");
                 petAge.setHorizontalAlignment(JTextField.CENTER);
                 petAge.setDisabledTextColor(black);
@@ -186,9 +178,7 @@ public class MainUI {
                 top.setLayout(new BorderLayout());
                 top.add(h_petName, BorderLayout.NORTH);
                 top.add(h_petAge, BorderLayout.SOUTH);
-                
-                // Midle
-                // > Card ---------------------------------------------------------
+
                 middle = new JPanel();
                 middle.setPreferredSize(new Dimension(440, 570));
                 middle.setLayout(cardLayout);
@@ -203,8 +193,6 @@ public class MainUI {
                     }
                 }
 
-                // Bottom
-                // >>> Bullet
                 bullets = new ArrayList<>();
                 
                 bottom = new JPanel();
@@ -235,7 +223,6 @@ public class MainUI {
                     petName.setText("Add Pet");
                     petAge.setText("");
                 } else {
-                    // Pastikan ada pet sebelum mencoba mengakses
                     if (currentIndex - 1 < petRepositoriesImp.getPetList().size()) {
                         currentPet = petRepositoriesImp.getPetList().get(currentIndex - 1);
                         petName.setText(currentPet.getName());
@@ -256,7 +243,6 @@ public class MainUI {
                     petName.setText("Add Pet");
                     petAge.setText("");
                 } else {
-                    // Pastikan ada pet sebelum mencoba mengakses
                     if (currentIndex - 1 < petRepositoriesImp.getPetList().size()) {
                         currentPet = petRepositoriesImp.getPetList().get(currentIndex - 1);
                         petName.setText(currentPet.getName());
@@ -270,7 +256,6 @@ public class MainUI {
             
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
-                    // Menyimpan PetRepositoriesImp ke dalam file saat aplikasi ditutup
                     petRepositoriesImp.setLastSavedTime();
                     GameSaver.savePetRepository(petRepositoriesImp, "save.dat");
                     System.out.println("Pet data saved automatically.");
@@ -301,7 +286,7 @@ public class MainUI {
             if (petRepositoriesImp.getLastSavedTime() != null){
                 Duration duration = Duration.between(petRepositoriesImp.getLastSavedTime(), LocalDateTime.now());
                 double minutes = Math.floor(duration.toMinutes());
-                System.out.println(minutes); //for debug
+                System.out.println(minutes);
                 for(Pet pet : petRepositoriesImp.getPetList()){
                     for (double i = 0; i < minutes; i++){
                         if(!pet.isDead()) pet.updateStatus();
@@ -316,16 +301,13 @@ public class MainUI {
     }
     
     private void updateBullets() {
-        // Ensure the current index is within bounds
         if (currentIndex < 0 || currentIndex >= bullets.size()) {
             currentIndex = 0;
         }
         
-        // Update bullet colors
         for (int i = 0; i < bullets.size(); i++) {
             JTextField bullet = bullets.get(i);
             
-            // Highlight the current bullet
             if (i == currentIndex) {
                 bullet.setDisabledTextColor(Color.BLACK);
                 bullet.setText("\ue837");
@@ -338,11 +320,9 @@ public class MainUI {
     protected void updateCardNavigation() {
         cardLength = petRepositoriesImp.getPetList().size() + 1;
         
-        // Hapus bullets lama
         bottom.removeAll();
         bullets.clear();
         
-        // Buat bullets baru
         for(int i = 0; i < cardLength; i++){
             JTextField bullet = new JTextField("\ue836");
             bullet.setHorizontalAlignment(JTextField.CENTER);

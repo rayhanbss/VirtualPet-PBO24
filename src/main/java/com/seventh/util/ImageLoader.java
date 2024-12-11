@@ -1,5 +1,6 @@
 package com.seventh.util;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,6 +18,8 @@ public class ImageLoader {
                 
                 if (image != null) {
                     ImageIcon imageIcon = new ImageIcon(image);
+                    Image resized = imageIcon.getImage().getScaledInstance(350, 350,  java.awt.Image.SCALE_SMOOTH);
+                    imageIcon = new ImageIcon(resized);
                     System.out.println("Loaded image details:");
                     System.out.println("Width: " + imageIcon.getIconWidth());
                     System.out.println("Height: " + imageIcon.getIconHeight());

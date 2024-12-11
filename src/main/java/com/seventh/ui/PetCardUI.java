@@ -55,19 +55,16 @@ public class PetCardUI extends JPanel{
     public PetCardUI(Pet pet){
         this.pet = pet;
 
-        // Load Font
         buttonIcon = FontLoader.load(
             "MaterialSymbolsRounded.ttf",
             36f
         );
 
-        // Cards panel
         this.setLayout(new BorderLayout());
         
         buttonSound = AudioLoader.load("button.wav");
         buttonSound.setFramePosition(0);
         
-        // >> main Part ---------------------------------------------------
         main = new JPanel();
         main.setPreferredSize(new Dimension(440, 400));
         main.setBackground(null);
@@ -99,9 +96,6 @@ public class PetCardUI extends JPanel{
         main.add(petPanel);
         main.add(effectsPanel);
         
-        // >> Bottom Part ---------------------------------------------------
-        
-        // >>> Button Panel
         vet = new JButton("\ue11f");
         food = new JButton("\ue56c");
         drink = new JButton("\ue798");
@@ -137,22 +131,18 @@ public class PetCardUI extends JPanel{
         mouseListener(nap);
         mouseListener(clean);
         
-        // >>> Bar Panel
-        // >>>> Health Bar
         healthBar = new RoundedProgressBar();
         healthBar.setPreferredSize(new Dimension(400, 30));
         healthBar.setForeground(green);
         healthBar.setBackground(grey);
         healthBar.setValue(100);
         
-        // >>>> Hunger Bar
         hungerBar = new RoundedProgressBar();
         hungerBar.setPreferredSize(new Dimension(400, 30));
         hungerBar.setForeground(red);
         hungerBar.setBackground(grey);
         hungerBar.setValue(100);
         
-        // >>>> Thirst Bar
         thirstBar = new RoundedProgressBar();
         thirstBar.setPreferredSize(new Dimension(400, 30));
         thirstBar.setForeground(blue);
